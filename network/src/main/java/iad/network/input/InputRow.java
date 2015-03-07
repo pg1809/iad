@@ -4,12 +4,17 @@ package iad.network.input;
  *
  * @author Wojciech Szałapski
  */
-public class TrainingInputRow {
+public class InputRow {
 
     private double[] values;
     
     private double expectedOutput;
 
+    public InputRow(double[] values, double expectedOutput) {
+        this.values = values;
+        this.expectedOutput = expectedOutput;
+    }
+    
     public double[] getValues() {
         return values;
     }

@@ -1,7 +1,7 @@
 package iad.network.training;
 
 import iad.network.AbstractNetwork;
-import iad.network.input.TrainingInputRow;
+import iad.network.input.InputRow;
 import iad.network.neuron.AbstractNeuron;
 import java.util.List;
 
@@ -15,10 +15,10 @@ public abstract class NetworkTrainer {
     
     private double learningRate = DEFAULT_LEARNING_RATE;
     
-    public abstract void trainNetwork(AbstractNetwork network, List<TrainingInputRow> trainingData);
+    public abstract void trainNetwork(AbstractNetwork network, List<InputRow> trainingData);
     
-    protected void trainNetworkWithSampleSet(AbstractNetwork network, List<TrainingInputRow> trainingData) {
-        for (TrainingInputRow trainingDataSample : trainingData) {
+    protected void trainNetworkWithSampleSet(AbstractNetwork network, List<InputRow> trainingData) {
+        for (InputRow trainingDataSample : trainingData) {
             List<AbstractNeuron> inputNeurons = network.getInputLayer().getNeurons();
             for (int i = 0; i < inputNeurons.size(); ++i) {
                 inputNeurons.get(i).setOutput(trainingDataSample.getValues()[i]);

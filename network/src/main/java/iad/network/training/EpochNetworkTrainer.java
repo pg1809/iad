@@ -1,7 +1,7 @@
 package iad.network.training;
 
 import iad.network.AbstractNetwork;
-import iad.network.input.TrainingInputRow;
+import iad.network.input.InputRow;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,7 +21,7 @@ public class EpochNetworkTrainer extends NetworkTrainer {
     }
     
     @Override
-    public void trainNetwork(AbstractNetwork network, List<TrainingInputRow> trainingData) {
+    public void trainNetwork(AbstractNetwork network, List<InputRow> trainingData) {
         for (int i = 0; i < numberOfEpochs; ++i) {
             Collections.shuffle(trainingData);
             trainNetworkWithSampleSet(network, trainingData);
