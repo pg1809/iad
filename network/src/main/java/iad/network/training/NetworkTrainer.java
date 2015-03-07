@@ -12,18 +12,14 @@ import java.util.List;
 public abstract class NetworkTrainer {
 
     private final static double DEFAULT_LEARNING_RATE = 0.1;
-    
+
     private double learningRate = DEFAULT_LEARNING_RATE;
-    
+
     public abstract void trainNetwork(AbstractNetwork network, List<InputRow> trainingData);
-    
+
     protected void trainNetworkWithSampleSet(AbstractNetwork network, List<InputRow> trainingData) {
         for (InputRow trainingDataSample : trainingData) {
-            List<AbstractNeuron> inputNeurons = network.getInputLayer().getNeurons();
-            for (int i = 0; i < inputNeurons.size(); ++i) {
-                inputNeurons.get(i).setOutput(trainingDataSample.getValues()[i]);
-            }
-            
+            network.readSample(trainingDataSample.getValues());
             trainNetworkFedWithSample(network, trainingDataSample.getExpectedOutput());
         }
     }

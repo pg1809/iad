@@ -9,6 +9,8 @@ import iad.network.factory.SingleNeuronNetworkFactory;
 import iad.network.input.InputRow;
 import iad.network.strategy.NeuronStrategy;
 import iad.network.strategy.PerceptronStrategy;
+import iad.network.training.EpochNetworkTrainer;
+import iad.network.training.NetworkTrainer;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,10 +33,9 @@ public class App {
 
             DataSetGenerator dataSetGenerator = new LinearlySeparableDataSetGenerator(0.5, 25, 0, 100);
             List<InputRow> inputDataSet = dataSetGenerator.generateData(50);
-
-            for (InputRow inputRow : inputDataSet) {
-                System.out.println(inputRow.getValues()[0] + " " + inputRow.getValues()[1] + " " + inputRow.getExpectedOutput());
-            }
+            
+            NetworkTrainer networkTrainer = new EpochNetworkTrainer(10, 0.1);
+            networkTrainer.trainNetwork(network, inputDataSet);
         } catch (CannotCreateNetworkException ex) {
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -1,9 +1,11 @@
 package iad.network;
 
+import iad.network.input.InputRow;
 import iad.network.layer.NeuronLayer;
 import iad.network.neuron.AbstractNeuron;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  *
@@ -11,11 +13,20 @@ import java.util.Collection;
  */
 public abstract class AbstractNetwork {
 
-    private NeuronLayer inputLayer = new NeuronLayer();
+    protected NeuronLayer inputLayer = new NeuronLayer();
 
-    private Collection<NeuronLayer> hiddenLayers = new ArrayList<>();
+    protected Collection<NeuronLayer> hiddenLayers = new ArrayList<>();
 
-    private NeuronLayer outputLayer = new NeuronLayer();
+    protected NeuronLayer outputLayer = new NeuronLayer();
+
+    public void readSample(double[] sample) {
+        List<AbstractNeuron> inputNeurons = inputLayer.getNeurons();
+        for (int i = 0; i < inputNeurons.size(); ++i) {
+            inputNeurons.get(i).setOutput(sample[i]);
+        }
+    }
+    
+    public abstract double[] runNetwork(double[] sample);
 
     public NeuronLayer getInputLayer() {
         return inputLayer;
