@@ -15,21 +15,42 @@ public abstract class NetworkTrainer {
 
     private double learningRate = DEFAULT_LEARNING_RATE;
 
-    public abstract void trainNetwork(AbstractNetwork network, List<InputRow> trainingData);
+    public abstract List<Double> trainNetwork(AbstractNetwork network, List<InputRow> trainingData);
 
-    protected void trainNetworkWithSampleSet(AbstractNetwork network, List<InputRow> trainingData) {
+    protected double trainNetworkWithSampleSet(AbstractNetwork network, List<InputRow> trainingData) {
         for (InputRow trainingDataSample : trainingData) {
             network.readSample(trainingDataSample.getValues());
             trainNetworkFedWithSample(network, trainingDataSample.getExpectedOutput());
         }
+
+        double meanSquaredError = 0;
+        for (InputRow trainingDataSample : trainingData) {
+            double sampleError = 0;
+            double[] output = network.runNetwork(trainingDataSample.getValues());
+
+            int outputLength = output.length;
+            for (int i = 0; i < outputLength; ++i) {
+                sampleError = Math.pow(trainingDataSample.getExpectedOutput()[i] - output[i], 2);
+            }
+            sampleError /= outputLength;
+
+            meanSquaredError += sampleError;
+        }
+
+        meanSquaredError /= trainingData.size();
+        return meanSquaredError;
     }
 
-    protected void trainNetworkFedWithSample(AbstractNetwork network, double expectedOutput) {
+    protected void trainNetworkFedWithSample(AbstractNetwork network, double[] expectedOutput) {
         List<AbstractNeuron> outputNeurons = network.getOutputLayer().getNeurons();
-        for (AbstractNeuron neuron : outputNeurons) {
-            neuron.updateOutput();
-            neuron.updateDelta(expectedOutput, learningRate);
-            neuron.updateParameters();
+        int outputNeuronsCount = outputNeurons.size();
+
+        for (int i = 0; i < outputNeuronsCount; ++i) {
+            AbstractNeuron currentNeuron = outputNeurons.get(i);
+
+            currentNeuron.updateOutput();
+            currentNeuron.updateDelta(expectedOutput[i], learningRate);
+            currentNeuron.updateParameters();
         }
     }
 

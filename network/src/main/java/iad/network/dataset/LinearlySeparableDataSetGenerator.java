@@ -43,9 +43,10 @@ public class LinearlySeparableDataSetGenerator implements DataSetGenerator {
             }
 
             double boundaryOrdinate = slope * sample[0] + intercept;
-            double expectedOutput = 0;
+            double[] expectedOutput = new double[1];
+            expectedOutput[0] = 0;
             if (sample[1] >= boundaryOrdinate) {
-                expectedOutput = 1;
+                expectedOutput[0] = 1;
             }
 
             InputRow inputRow = new InputRow(sample, expectedOutput);

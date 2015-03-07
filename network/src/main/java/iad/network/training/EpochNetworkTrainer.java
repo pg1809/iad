@@ -2,6 +2,7 @@ package iad.network.training;
 
 import iad.network.AbstractNetwork;
 import iad.network.input.InputRow;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -12,19 +13,23 @@ import java.util.List;
 public class EpochNetworkTrainer extends NetworkTrainer {
 
     private final int numberOfEpochs;
-    
+
     private final double learningRate;
 
     public EpochNetworkTrainer(int numberOfEpochs, double learningRate) {
         this.numberOfEpochs = numberOfEpochs;
         this.learningRate = learningRate;
     }
-    
+
     @Override
-    public void trainNetwork(AbstractNetwork network, List<InputRow> trainingData) {
+    public List<Double> trainNetwork(AbstractNetwork network, List<InputRow> trainingData) {
+        List<Double> meanSquaredErrors = new ArrayList<>();
+
         for (int i = 0; i < numberOfEpochs; ++i) {
             Collections.shuffle(trainingData);
-            trainNetworkWithSampleSet(network, trainingData);
+            meanSquaredErrors.add(trainNetworkWithSampleSet(network, trainingData));
         }
+
+        return meanSquaredErrors;
     }
 }

@@ -8,9 +8,9 @@ public class InputRow {
 
     private double[] values;
     
-    private double expectedOutput;
+    private double[] expectedOutput;
 
-    public InputRow(double[] values, double expectedOutput) {
+    public InputRow(double[] values, double[] expectedOutput) {
         this.values = values;
         this.expectedOutput = expectedOutput;
     }
@@ -23,11 +23,11 @@ public class InputRow {
         this.values = values;
     }
 
-    public double getExpectedOutput() {
+    public double[] getExpectedOutput() {
         return expectedOutput;
     }
 
-    public void setExpectedOutput(double expectedOutput) {
+    public void setExpectedOutput(double[] expectedOutput) {
         this.expectedOutput = expectedOutput;
     }
 }

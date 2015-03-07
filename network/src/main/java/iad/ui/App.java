@@ -34,8 +34,12 @@ public class App {
             DataSetGenerator dataSetGenerator = new LinearlySeparableDataSetGenerator(0.5, 25, 0, 100);
             List<InputRow> inputDataSet = dataSetGenerator.generateData(50);
             
-            NetworkTrainer networkTrainer = new EpochNetworkTrainer(10, 0.1);
-            networkTrainer.trainNetwork(network, inputDataSet);
+            NetworkTrainer networkTrainer = new EpochNetworkTrainer(1000, 0.1);
+            List<Double> meanSquaredErrors = networkTrainer.trainNetwork(network, inputDataSet);
+            
+            for (Double error : meanSquaredErrors) {
+                System.out.println(error);
+            }
         } catch (CannotCreateNetworkException ex) {
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
         }
