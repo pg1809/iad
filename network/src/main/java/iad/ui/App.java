@@ -16,14 +16,14 @@ import java.util.logging.Logger;
 public class App {
 
     private static final int inputs = 2;
-    
+
     private static final NeuronStrategy strategy = PerceptronStrategy.getInstance();
-    
+
     public static void main(String[] args) {
         NetworkFactory factory = new SingleNeuronNetworkFactory(inputs, strategy);
         AbstractNetwork network;
         try {
-             network = factory.createNetwork();
+            network = factory.createNetwork();
         } catch (CannotCreateNetworkException ex) {
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
         }

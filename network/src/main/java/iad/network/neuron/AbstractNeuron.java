@@ -12,6 +12,8 @@ public abstract class AbstractNeuron {
 
     protected double output;
 
+    protected double bias;
+
     protected Collection<AbstractNeuron> forwardNeurons = new ArrayList<>();
 
     protected Collection<NeuronInput> inputNeurons = new ArrayList<>();
@@ -19,14 +21,14 @@ public abstract class AbstractNeuron {
     protected NeuronStrategy strategy;
 
     public void updateOutput() {
-        double netValue = strategy.calculateNetValue(inputNeurons);
+        double netValue = strategy.calculateNetValue(inputNeurons, bias);
         output = strategy.transfer(netValue);
     }
-    
+
     public void addForwardNeuron(AbstractNeuron neuron) {
         forwardNeurons.add(neuron);
     }
-    
+
     public void addInputNeuron(NeuronInput inputNeuron) {
         inputNeurons.add(inputNeuron);
     }
@@ -39,6 +41,14 @@ public abstract class AbstractNeuron {
         this.output = output;
     }
 
+    public double getBias() {
+        return bias;
+    }
+
+    public void setBias(double bias) {
+        this.bias = bias;
+    }
+
     public Collection<AbstractNeuron> getForwardNeurons() {
         return forwardNeurons;
     }
@@ -47,11 +57,11 @@ public abstract class AbstractNeuron {
         this.forwardNeurons = forwardNeurons;
     }
 
-    public Collection<NeuronInput> getInputs() {
+    public Collection<NeuronInput> getInputNeurons() {
         return inputNeurons;
     }
 
-    public void setInputs(Collection<NeuronInput> inputNeurons) {
+    public void setInputNeurons(Collection<NeuronInput> inputNeurons) {
         this.inputNeurons = inputNeurons;
     }
 

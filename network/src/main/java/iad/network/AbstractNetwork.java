@@ -11,11 +11,11 @@ import java.util.Collection;
  */
 public abstract class AbstractNetwork {
 
-    private NeuronLayer inputLayer;
+    private NeuronLayer inputLayer = new NeuronLayer();
 
     private Collection<NeuronLayer> hiddenLayers = new ArrayList<>();
 
-    private NeuronLayer outputLayer;
+    private NeuronLayer outputLayer = new NeuronLayer();
 
     public NeuronLayer getInputLayer() {
         return inputLayer;

@@ -11,5 +11,5 @@ public interface NeuronStrategy {
     
     public double transfer(double netValue);
     
-    public double calculateNetValue(Collection<NeuronInput> inputNeurons);
+    public double calculateNetValue(Collection<NeuronInput> inputNeurons, double bias);
 }

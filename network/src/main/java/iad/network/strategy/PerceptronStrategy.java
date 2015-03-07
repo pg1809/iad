@@ -37,8 +37,8 @@ public class PerceptronStrategy implements NeuronStrategy {
     }
 
     @Override
-    public double calculateNetValue(Collection<NeuronInput> inputNeurons) {
-        double netValue = 0;
+    public double calculateNetValue(Collection<NeuronInput> inputNeurons, double bias) {
+        double netValue = bias;
         for (NeuronInput neuron : inputNeurons) {
             netValue += neuron.getInputNeuron().getOutput() * neuron.getWeight();
         }
