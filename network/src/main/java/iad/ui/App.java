@@ -8,6 +8,7 @@ import iad.network.factory.SingleNeuronNetworkFactory;
 import iad.network.input.InputRow;
 import iad.network.strategy.NeuronStrategy;
 import iad.network.strategy.PerceptronStrategy;
+import iad.network.strategy.WidrowHoffStrategy;
 import iad.network.training.EpochNetworkTrainer;
 import iad.network.training.NetworkTrainer;
 import java.io.IOException;
@@ -23,7 +24,7 @@ public class App {
 
     private static final int inputs = 2;
 
-    private static final NeuronStrategy strategy = PerceptronStrategy.getInstance();
+    private static final NeuronStrategy strategy = WidrowHoffStrategy.getInstance();
 
     public static void main(String[] args) {
         SingleNeuronNetworkFactory factory = new SingleNeuronNetworkFactory(inputs, strategy);
@@ -33,9 +34,9 @@ public class App {
 
             LinearlySeparableDataSetGenerator dataSetGenerator = new LinearlySeparableDataSetGenerator(0.5, 25, 0, 100);
 
-            List<InputRow> inputDataSet = dataSetGenerator.generateData(100);
+            List<InputRow> inputDataSet = dataSetGenerator.generateData(50);
 
-            NetworkTrainer networkTrainer = new EpochNetworkTrainer(5000, 0.3);
+            NetworkTrainer networkTrainer = new EpochNetworkTrainer(5000, 0.1);
 
             List<Double> meanSquaredErrors = networkTrainer.trainNetwork(network, inputDataSet);
 
