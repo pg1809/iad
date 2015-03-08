@@ -65,4 +65,9 @@ public class PerceptronStrategy implements NeuronStrategy {
     public void updateDelta(AbstractNeuron neuron, double expectedOutput, double learningRate) {
         neuron.setDelta(learningRate * (expectedOutput - neuron.getOutput()));
     }
+
+    @Override
+    public String toString() {
+        return "Perceptron";
+    }
 }

@@ -27,4 +27,9 @@ public class WidrowHoffStrategy extends PerceptronStrategy {
         neuron.setDelta(learningRate * 2 * (expectedOutput - neuron.getOutput())
                 * neuron.getNetValue() * (1 - neuron.getNetValue()));
     }
+
+    @Override
+    public String toString() {
+        return "Widrow-Hoff";
+    }
 }
