@@ -1,7 +1,8 @@
 package iad.network;
 
 import iad.network.neuron.AbstractNeuron;
-import java.util.ArrayList;
+import iad.network.neuron.NeuronInput;
+import java.util.List;
 
 /**
  *
@@ -29,5 +30,15 @@ public class SingleNeuronNetwork extends AbstractNetwork {
         }
 
         return result;
+    }
+    
+    public void printNeuron() {
+        AbstractNeuron neuron = outputLayer.getNeurons().get(0);
+        System.out.println("bias: " + neuron.getBias());
+        
+        List<NeuronInput> neuronInputs = neuron.getInputNeurons();
+        for (int i = 0; i < neuronInputs.size(); ++i) {
+            System.out.println("Input " + i + " : " + neuronInputs.get(i).getWeight());
+        }
     }
 }

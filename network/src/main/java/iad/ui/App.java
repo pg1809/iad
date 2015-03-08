@@ -34,7 +34,7 @@ public class App {
             DataSetGenerator dataSetGenerator = new LinearlySeparableDataSetGenerator(0.5, 25, 0, 100);
             List<InputRow> inputDataSet = dataSetGenerator.generateData(50);
             
-            NetworkTrainer networkTrainer = new EpochNetworkTrainer(1000, 0.1);
+            NetworkTrainer networkTrainer = new EpochNetworkTrainer(20, 0.3);
             List<Double> meanSquaredErrors = networkTrainer.trainNetwork(network, inputDataSet);
             
             for (Double error : meanSquaredErrors) {

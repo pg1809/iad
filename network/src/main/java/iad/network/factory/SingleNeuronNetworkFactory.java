@@ -19,7 +19,7 @@ public class SingleNeuronNetworkFactory implements NetworkFactory {
 
     private NeuronStrategy strategy;
 
-    private RandomWeightsGenerator weightsGenerator;
+    private final RandomWeightsGenerator weightsGenerator;
 
     public SingleNeuronNetworkFactory(int inputs, NeuronStrategy strategy) {
         this.inputs = inputs;
