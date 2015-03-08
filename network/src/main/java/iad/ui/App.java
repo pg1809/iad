@@ -1,11 +1,17 @@
 package iad.ui;
 
 import iad.network.AbstractNetwork;
+import iad.network.dataset.DataSetGenerator;
+import iad.network.dataset.LinearlySeparableDataSetGenerator;
 import iad.network.exceptions.CannotCreateNetworkException;
 import iad.network.factory.NetworkFactory;
 import iad.network.factory.SingleNeuronNetworkFactory;
+import iad.network.input.InputRow;
 import iad.network.strategy.NeuronStrategy;
 import iad.network.strategy.PerceptronStrategy;
+import iad.network.training.EpochNetworkTrainer;
+import iad.network.training.NetworkTrainer;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,14 +22,24 @@ import java.util.logging.Logger;
 public class App {
 
     private static final int inputs = 2;
-    
+
     private static final NeuronStrategy strategy = PerceptronStrategy.getInstance();
-    
+
     public static void main(String[] args) {
         NetworkFactory factory = new SingleNeuronNetworkFactory(inputs, strategy);
         AbstractNetwork network;
         try {
-             network = factory.createNetwork();
+            network = factory.createNetwork();
+
+            DataSetGenerator dataSetGenerator = new LinearlySeparableDataSetGenerator(0.5, 25, 0, 100);
+            List<InputRow> inputDataSet = dataSetGenerator.generateData(50);
+            
+            NetworkTrainer networkTrainer = new EpochNetworkTrainer(1000, 0.1);
+            List<Double> meanSquaredErrors = networkTrainer.trainNetwork(network, inputDataSet);
+            
+            for (Double error : meanSquaredErrors) {
+                System.out.println(error);
+            }
         } catch (CannotCreateNetworkException ex) {
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
         }

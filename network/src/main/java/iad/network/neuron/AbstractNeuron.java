@@ -2,7 +2,7 @@ package iad.network.neuron;
 
 import iad.network.strategy.NeuronStrategy;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 /**
  *
@@ -12,21 +12,34 @@ public abstract class AbstractNeuron {
 
     protected double output;
 
-    protected Collection<AbstractNeuron> forwardNeurons = new ArrayList<>();
+    protected double bias;
 
-    protected Collection<NeuronInput> inputNeurons = new ArrayList<>();
+    protected double delta;
+
+    protected List<AbstractNeuron> forwardNeurons = new ArrayList<>();
+
+    protected List<NeuronInput> inputNeurons = new ArrayList<>();
 
     protected NeuronStrategy strategy;
 
     public void updateOutput() {
-        double netValue = strategy.calculateNetValue(inputNeurons);
+        double netValue = strategy.calculateNetValue(inputNeurons, bias);
         output = strategy.transfer(netValue);
     }
-    
+
+    public void updateDelta(double expectedOutput, double learningRate) {
+        strategy.updateDelta(this, expectedOutput, learningRate);
+    }
+
+    public void updateParameters() {
+        strategy.updateBias(this, delta);
+        strategy.updateWeights(this, delta);
+    }
+
     public void addForwardNeuron(AbstractNeuron neuron) {
         forwardNeurons.add(neuron);
     }
-    
+
     public void addInputNeuron(NeuronInput inputNeuron) {
         inputNeurons.add(inputNeuron);
     }
@@ -39,19 +52,35 @@ public abstract class AbstractNeuron {
         this.output = output;
     }
 
-    public Collection<AbstractNeuron> getForwardNeurons() {
+    public double getBias() {
+        return bias;
+    }
+
+    public void setBias(double bias) {
+        this.bias = bias;
+    }
+
+    public double getDelta() {
+        return delta;
+    }
+
+    public void setDelta(double delta) {
+        this.delta = delta;
+    }
+
+    public List<AbstractNeuron> getForwardNeurons() {
         return forwardNeurons;
     }
 
-    public void setForwardNeurons(Collection<AbstractNeuron> forwardNeurons) {
+    public void setForwardNeurons(List<AbstractNeuron> forwardNeurons) {
         this.forwardNeurons = forwardNeurons;
     }
 
-    public Collection<NeuronInput> getInputs() {
+    public List<NeuronInput> getInputNeurons() {
         return inputNeurons;
     }
 
-    public void setInputs(Collection<NeuronInput> inputNeurons) {
+    public void setInputNeurons(List<NeuronInput> inputNeurons) {
         this.inputNeurons = inputNeurons;
     }
 

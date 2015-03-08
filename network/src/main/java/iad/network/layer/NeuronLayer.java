@@ -3,6 +3,7 @@ package iad.network.layer;
 import iad.network.neuron.AbstractNeuron;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  *
@@ -10,17 +11,17 @@ import java.util.Collection;
  */
 public class NeuronLayer {
 
-    private Collection<AbstractNeuron> neurons = new ArrayList<>();
+    private List<AbstractNeuron> neurons = new ArrayList<>();
 
     public void addNeuron(AbstractNeuron neuron) {
         neurons.add(neuron);
     }
 
-    public Collection<AbstractNeuron> getNeurons() {
+    public List<AbstractNeuron> getNeurons() {
         return neurons;
     }
 
-    public void setNeurons(Collection<AbstractNeuron> neurons) {
+    public void setNeurons(List<AbstractNeuron> neurons) {
         this.neurons = neurons;
     }
 }

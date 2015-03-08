@@ -5,6 +5,7 @@ import iad.network.SingleNeuronNetwork;
 import iad.network.exceptions.NoStrategySpecifiedException;
 import iad.network.layer.NeuronLayer;
 import iad.network.neuron.Neuron;
+import iad.network.neuron.NeuronInput;
 import iad.network.strategy.NeuronStrategy;
 import iad.network.weight.RandomWeightsGenerator;
 
@@ -24,7 +25,7 @@ public class SingleNeuronNetworkFactory implements NetworkFactory {
         this.inputs = inputs;
         this.strategy = strategy;
 
-        weightsGenerator = new RandomWeightsGenerator(inputs, 0, 1);
+        weightsGenerator = new RandomWeightsGenerator(inputs + 1, 0, 1);
     }
 
     @Override
@@ -34,10 +35,25 @@ public class SingleNeuronNetworkFactory implements NetworkFactory {
         }
 
         SingleNeuronNetwork network = new SingleNeuronNetwork(inputs);
-
+        NeuronLayer inputLayer = new NeuronLayer();
         NeuronLayer outputLayer = new NeuronLayer();
+        
         Neuron neuron = new Neuron(strategy);
+        
+        double[] weights = weightsGenerator.generateWeights();
+        neuron.setBias(weights[0]);
+        for (int i = 1; i <= inputs; ++i) {
+            Neuron inputNeuron = new Neuron(strategy);
+            inputLayer.addNeuron(inputNeuron);
+            
+            NeuronInput input = new NeuronInput(inputNeuron, weights[i]);
+            neuron.addInputNeuron(input);
+            inputNeuron.addForwardNeuron(neuron);
+        }
+        
         outputLayer.addNeuron(neuron);
+        
+        network.setInputLayer(inputLayer);
         network.setOutputLayer(outputLayer);
 
         return network;
