@@ -68,7 +68,7 @@
                                           <Group type="103" groupAlignment="0" attributes="0">
                                               <Component id="errorRadio" min="-2" max="-2" attributes="0"/>
                                               <Group type="102" alignment="0" attributes="0">
-                                                  <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="targetErrorLabel" min="-2" max="-2" attributes="0"/>
                                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                                   <Component id="targetErrorField" min="-2" pref="44" max="-2" attributes="0"/>
                                               </Group>
@@ -140,7 +140,7 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="epochNumField" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="targetErrorLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="targetErrorField" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -194,7 +194,7 @@
         </Component>
         <Component class="javax.swing.JTextField" name="epochNumField">
         </Component>
-        <Component class="javax.swing.JLabel" name="jLabel3">
+        <Component class="javax.swing.JLabel" name="targetErrorLabel">
           <Properties>
             <Property name="text" type="java.lang.String" value="Docelowy b&#x142;&#x105;d"/>
           </Properties>

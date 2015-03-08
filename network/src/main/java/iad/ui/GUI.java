@@ -30,14 +30,45 @@ public class GUI extends javax.swing.JFrame {
 
     private final PlotGenerator generator;
 
+    private final static int DEFAULT_NUMBER_OF_POINTS = 100;
+
+    private final static double DEFAULT_LEARNING_RAGE = 0.1;
+
+    private final static int DEFAULT_NUMBER_OF_EPOCHS = 5000;
+
+    private final static double DEFAULT_SLOPE = 0.5;
+
+    private final static double DEFAULT_INTERCEPT = 2;
+
+    private final static double DEFAULT_LOWER_BOUND = -50;
+
+    private final static double DEFAULT_UPPER_BOUND = 50;
+
     /**
      * Creates new form GUI
      */
     public GUI() {
         this.generator = new PlotGenerator(1024, 768);
         initComponents();
+
         strategyCombo.addItem(PerceptronStrategy.getInstance());
         strategyCombo.addItem(WidrowHoffStrategy.getInstance());
+
+        targetErrorLabel.setVisible(false);
+        targetErrorField.setVisible(false);
+        errorRadio.setVisible(false);
+
+        initializeDefaults();
+    }
+
+    private void initializeDefaults() {
+        pointsNumField.setText(String.valueOf(DEFAULT_NUMBER_OF_POINTS));
+        learningRateField.setText(String.valueOf(DEFAULT_LEARNING_RAGE));
+        epochNumField.setText(String.valueOf(DEFAULT_NUMBER_OF_EPOCHS));
+        slopeField.setText(String.valueOf(DEFAULT_SLOPE));
+        interceptField.setText(String.valueOf(DEFAULT_INTERCEPT));
+        lowerBoundField.setText(String.valueOf(DEFAULT_LOWER_BOUND));
+        upperBoundField.setText(String.valueOf(DEFAULT_UPPER_BOUND));
     }
 
     /**
@@ -55,7 +86,7 @@ public class GUI extends javax.swing.JFrame {
         pointsNumField = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         epochNumField = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
+        targetErrorLabel = new javax.swing.JLabel();
         targetErrorField = new javax.swing.JTextField();
         epochRadio = new javax.swing.JRadioButton();
         errorRadio = new javax.swing.JRadioButton();
@@ -82,7 +113,7 @@ public class GUI extends javax.swing.JFrame {
 
         jLabel2.setText("Liczba epok");
 
-        jLabel3.setText("Docelowy błąd");
+        targetErrorLabel.setText("Docelowy błąd");
 
         targetErrorField.setEnabled(false);
 
@@ -149,7 +180,7 @@ public class GUI extends javax.swing.JFrame {
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(errorRadio)
                                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addComponent(jLabel3)
+                                                .addComponent(targetErrorLabel)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                                 .addComponent(targetErrorField, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -201,7 +232,7 @@ public class GUI extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(epochNumField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3)
+                    .addComponent(targetErrorLabel)
                     .addComponent(targetErrorField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -266,9 +297,9 @@ public class GUI extends javax.swing.JFrame {
         double intercept = Double.parseDouble(interceptField.getText());
         double dataUpperBound = Double.parseDouble(upperBoundField.getText());
         double dataLowerBound = Double.parseDouble(lowerBoundField.getText());
-        
+
         NeuronStrategy strategy = (NeuronStrategy) strategyCombo.getSelectedItem();
-        
+
         SingleNeuronNetworkFactory factory = new SingleNeuronNetworkFactory(inputs, strategy);
         SingleNeuronNetwork network;
         try {
@@ -332,7 +363,6 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JTextField interceptField;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -350,6 +380,7 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JButton startButton;
     private javax.swing.JComboBox strategyCombo;
     private javax.swing.JTextField targetErrorField;
+    private javax.swing.JLabel targetErrorLabel;
     private javax.swing.JTextField upperBoundField;
     // End of variables declaration//GEN-END:variables
 }
