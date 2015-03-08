@@ -5,7 +5,6 @@
  */
 package iad.network.strategy;
 
-import iad.network.neuron.AbstractNeuron;
 import iad.network.neuron.NeuronInput;
 import java.util.Collection;
 
