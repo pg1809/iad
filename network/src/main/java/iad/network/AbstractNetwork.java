@@ -1,6 +1,5 @@
 package iad.network;
 
-import iad.network.input.InputRow;
 import iad.network.layer.NeuronLayer;
 import iad.network.neuron.AbstractNeuron;
 import java.util.ArrayList;
