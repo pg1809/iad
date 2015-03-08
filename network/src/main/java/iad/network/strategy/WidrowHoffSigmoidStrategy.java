@@ -9,7 +9,7 @@ package iad.network.strategy;
  *
  * @author Wojciech Szałapski
  */
-public class WidrowHoffSigmoidStrategy {
+public class WidrowHoffSigmoidStrategy extends WidrowHoffHeavisideStrategy {
 
     private WidrowHoffSigmoidStrategy() {
     }
@@ -21,5 +21,15 @@ public class WidrowHoffSigmoidStrategy {
     private static class WidrowHoffSigmoidStrategyHolder {
 
         private static final WidrowHoffSigmoidStrategy INSTANCE = new WidrowHoffSigmoidStrategy();
+    }
+
+    @Override
+    public double transfer(double netValue) {
+        return (1 / (1 + Math.exp(-netValue)));
+    }
+
+    @Override
+    public String toString() {
+        return "Widrow-Hoff - Sigmoid";
     }
 }
