@@ -16,7 +16,7 @@ public class LinearlySeparableDataSetGenerator implements DataSetGenerator {
     // y = slope * x + intercept
     private double slope, intercept;
 
-    // points' x and y coordinates are from the range [lowerBound, upperBound]
+    // points' x and y coordinates are from the range [lowerBound, upperBound)
     private double lowerBound, upperBound;
 
     private final Random generator = new Random();

@@ -30,7 +30,7 @@ public class PerceptronStrategy implements NeuronStrategy {
 
     @Override
     public double transfer(double netValue) {
-        if (netValue >= 0) {
+        if (netValue > 0) {
             return 1;
         } else {
             return 0;
