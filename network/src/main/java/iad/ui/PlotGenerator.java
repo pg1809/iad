@@ -26,14 +26,18 @@ import org.jfree.data.xy.XYSeriesCollection;
 public class PlotGenerator {
 
     private int chartWidth;
-    
+
     private int chartHeight;
+
+    private int errorChartId = 1;
+
+    private int dataChartId = 1;
 
     public PlotGenerator(int chartWidth, int chartHeight) {
         this.chartWidth = chartWidth;
         this.chartHeight = chartHeight;
     }
-    
+
     public void generateErrorChart(List<Double> errors) throws IOException {
         XYSeries data = new XYSeries("Errors");
 
@@ -49,14 +53,17 @@ public class PlotGenerator {
         renderer.setSeriesLinesVisible(0, false);
         chart.getXYPlot().setRenderer(renderer);
 
-        File XYChart = new File("errorChart.png");
+        File XYChart = new File("errorChart" + (errorChartId++) + ".png");
         ChartUtilities.saveChartAsJPEG(XYChart, chart, chartWidth, chartHeight);
     }
 
-    public void generateExemplaryDataChart(List<InputRow> input, LinearlySeparableDataSetGenerator generator) throws IOException {
+    public void generateExemplaryDataChart(List<InputRow> input, LinearlySeparableDataSetGenerator generator,
+            double networkLineSlope, double networkLineIntercept) throws IOException {
+
         XYSeries firstClass = new XYSeries("First class");
         XYSeries secondClass = new XYSeries("Second class");
         XYSeries separator = new XYSeries("Separator");
+        XYSeries networkSeparator = new XYSeries("Network separator");
 
         for (InputRow row : input) {
             double classIdentifier = row.getExpectedOutput()[0];
@@ -77,10 +84,17 @@ public class PlotGenerator {
         separator.add(minSeparatorX, minSeparatorY);
         separator.add(maxSeparatorX, maxSeparatorY);
 
+        double maxNetworkSeparatorY = maxSeparatorX * networkLineSlope + networkLineIntercept;
+        double minNetworkSeparatorY = minSeparatorX * networkLineSlope + networkLineIntercept;
+
+        networkSeparator.add(minSeparatorX, minNetworkSeparatorY);
+        networkSeparator.add(maxSeparatorX, maxNetworkSeparatorY);
+
         XYSeriesCollection dataset = new XYSeriesCollection();
         dataset.addSeries(firstClass);
         dataset.addSeries(secondClass);
         dataset.addSeries(separator);
+        dataset.addSeries(networkSeparator);
         JFreeChart chart = ChartFactory.createXYLineChart("Exemplary set of data", "X", "Y", dataset, PlotOrientation.VERTICAL, true, true, true);
 
         XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
@@ -93,7 +107,7 @@ public class PlotGenerator {
 
         chart.getXYPlot().setRenderer(renderer);
 
-        File XYChart = new File("exemplaryDataChart.png");
+        File XYChart = new File("exemplaryDataChart" + (dataChartId++) + ".png");
         ChartUtilities.saveChartAsJPEG(XYChart, chart, chartWidth, chartHeight);
     }
 }

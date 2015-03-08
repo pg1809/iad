@@ -1,7 +1,6 @@
 package iad.ui;
 
-import iad.network.AbstractNetwork;
-import iad.network.dataset.DataSetGenerator;
+import iad.network.SingleNeuronNetwork;
 import iad.network.dataset.LinearlySeparableDataSetGenerator;
 import iad.network.exceptions.CannotCreateNetworkException;
 import iad.network.factory.NetworkFactory;
@@ -27,26 +26,22 @@ public class App {
     private static final NeuronStrategy strategy = PerceptronStrategy.getInstance();
 
     public static void main(String[] args) {
-        NetworkFactory factory = new SingleNeuronNetworkFactory(inputs, strategy);
-        AbstractNetwork network;
+        SingleNeuronNetworkFactory factory = new SingleNeuronNetworkFactory(inputs, strategy);
+        SingleNeuronNetwork network;
         try {
             network = factory.createNetwork();
 
-            DataSetGenerator dataSetGenerator = new LinearlySeparableDataSetGenerator(0.5, 25, 0, 100);
+            LinearlySeparableDataSetGenerator dataSetGenerator = new LinearlySeparableDataSetGenerator(0.5, 25, 0, 100);
 
-            List<InputRow> inputDataSet = dataSetGenerator.generateData(1000);
-            
-            NetworkTrainer networkTrainer = new EpochNetworkTrainer(500, 0.3);
+            List<InputRow> inputDataSet = dataSetGenerator.generateData(100);
+
+            NetworkTrainer networkTrainer = new EpochNetworkTrainer(5000, 0.3);
 
             List<Double> meanSquaredErrors = networkTrainer.trainNetwork(network, inputDataSet);
 
-            for (Double error : meanSquaredErrors) {
-                System.out.println(error);
-            }
-
             PlotGenerator generator = new PlotGenerator(1024, 768);
             generator.generateErrorChart(meanSquaredErrors);
-            generator.generateExemplaryDataChart(inputDataSet, (LinearlySeparableDataSetGenerator) dataSetGenerator);
+            generator.generateExemplaryDataChart(inputDataSet, dataSetGenerator, network.getSlope(), network.getIntercept());
         } catch (CannotCreateNetworkException | IOException ex) {
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
         }

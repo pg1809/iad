@@ -1,6 +1,5 @@
 package iad.network.factory;
 
-import iad.network.AbstractNetwork;
 import iad.network.SingleNeuronNetwork;
 import iad.network.exceptions.NoStrategySpecifiedException;
 import iad.network.layer.NeuronLayer;
@@ -29,7 +28,7 @@ public class SingleNeuronNetworkFactory implements NetworkFactory {
     }
 
     @Override
-    public AbstractNetwork createNetwork() throws NoStrategySpecifiedException {
+    public SingleNeuronNetwork createNetwork() throws NoStrategySpecifiedException {
         if (strategy == null) {
             throw new NoStrategySpecifiedException();
         }
@@ -37,22 +36,22 @@ public class SingleNeuronNetworkFactory implements NetworkFactory {
         SingleNeuronNetwork network = new SingleNeuronNetwork(inputs);
         NeuronLayer inputLayer = new NeuronLayer();
         NeuronLayer outputLayer = new NeuronLayer();
-        
+
         Neuron neuron = new Neuron(strategy);
-        
+
         double[] weights = weightsGenerator.generateWeights();
         neuron.setBias(weights[0]);
         for (int i = 1; i <= inputs; ++i) {
             Neuron inputNeuron = new Neuron(strategy);
             inputLayer.addNeuron(inputNeuron);
-            
+
             NeuronInput input = new NeuronInput(inputNeuron, weights[i]);
             neuron.addInputNeuron(input);
             inputNeuron.addForwardNeuron(neuron);
         }
-        
+
         outputLayer.addNeuron(neuron);
-        
+
         network.setInputLayer(inputLayer);
         network.setOutputLayer(outputLayer);
 

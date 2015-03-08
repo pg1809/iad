@@ -42,7 +42,7 @@ public class PerceptronStrategy implements NeuronStrategy {
         for (NeuronInput neuron : inputNeurons) {
             netValue += neuron.getInputNeuron().getOutput() * neuron.getWeight();
         }
-        
+
         return netValue;
     }
 
@@ -63,6 +63,9 @@ public class PerceptronStrategy implements NeuronStrategy {
 
     @Override
     public void updateDelta(AbstractNeuron neuron, double expectedOutput, double learningRate) {
+        if (expectedOutput != neuron.getOutput()) {
+            System.out.println("expected: " + expectedOutput + " neuron: " + neuron.getOutput());
+        }
         neuron.setDelta(learningRate * (expectedOutput - neuron.getOutput()));
     }
 }
