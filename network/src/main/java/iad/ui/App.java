@@ -42,7 +42,7 @@ public class App {
                 System.out.println(error);
             }
 
-            PlotGenerator generator = new PlotGenerator();
+            PlotGenerator generator = new PlotGenerator(1024, 768);
             generator.generateErrorChart(meanSquaredErrors);
             generator.generateExemplaryDataChart(inputDataSet, (LinearlySeparableDataSetGenerator) dataSetGenerator);
         } catch (CannotCreateNetworkException | IOException ex) {

@@ -25,6 +25,15 @@ import org.jfree.data.xy.XYSeriesCollection;
  */
 public class PlotGenerator {
 
+    private int chartWidth;
+    
+    private int chartHeight;
+
+    public PlotGenerator(int chartWidth, int chartHeight) {
+        this.chartWidth = chartWidth;
+        this.chartHeight = chartHeight;
+    }
+    
     public void generateErrorChart(List<Double> errors) throws IOException {
         XYSeries data = new XYSeries("Errors");
 
@@ -40,11 +49,8 @@ public class PlotGenerator {
         renderer.setSeriesLinesVisible(0, false);
         chart.getXYPlot().setRenderer(renderer);
 
-        int width = 640;
-        int height = 480;
-
         File XYChart = new File("errorChart.png");
-        ChartUtilities.saveChartAsJPEG(XYChart, chart, width, height);
+        ChartUtilities.saveChartAsJPEG(XYChart, chart, chartWidth, chartHeight);
     }
 
     public void generateExemplaryDataChart(List<InputRow> input, LinearlySeparableDataSetGenerator generator) throws IOException {
@@ -86,10 +92,8 @@ public class PlotGenerator {
         renderer.setSeriesPaint(2, Color.YELLOW);
 
         chart.getXYPlot().setRenderer(renderer);
-        int width = 640;
-        int height = 480;
 
         File XYChart = new File("exemplaryDataChart.png");
-        ChartUtilities.saveChartAsJPEG(XYChart, chart, width, height);
+        ChartUtilities.saveChartAsJPEG(XYChart, chart, chartWidth, chartHeight);
     }
 }
