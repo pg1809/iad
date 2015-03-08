@@ -11,14 +11,15 @@ import iad.network.exceptions.CannotCreateNetworkException;
 import iad.network.factory.SingleNeuronNetworkFactory;
 import iad.network.input.InputRow;
 import iad.network.strategy.NeuronStrategy;
-import iad.network.strategy.PerceptronStrategy;
-import iad.network.strategy.WidrowHoffStrategy;
+import iad.network.strategy.WidrowHoffHeavisideStrategy;
+import iad.network.strategy.WidrowHoffSigmoidStrategy;
 import iad.network.training.EpochNetworkTrainer;
 import iad.network.training.NetworkTrainer;
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -34,7 +35,7 @@ public class GUI extends javax.swing.JFrame {
 
     private final static double DEFAULT_LEARNING_RAGE = 0.1;
 
-    private final static int DEFAULT_NUMBER_OF_EPOCHS = 5000;
+    private final static int DEFAULT_NUMBER_OF_EPOCHS = 200;
 
     private final static double DEFAULT_SLOPE = 0.5;
 
@@ -51,8 +52,8 @@ public class GUI extends javax.swing.JFrame {
         this.generator = new PlotGenerator(1024, 768);
         initComponents();
 
-        strategyCombo.addItem(PerceptronStrategy.getInstance());
-        strategyCombo.addItem(WidrowHoffStrategy.getInstance());
+        strategyCombo.addItem(WidrowHoffHeavisideStrategy.getInstance());
+        strategyCombo.addItem(WidrowHoffSigmoidStrategy.getInstance());
 
         targetErrorLabel.setVisible(false);
         targetErrorField.setVisible(false);
@@ -201,11 +202,10 @@ public class GUI extends javax.swing.JFrame {
                                             .addComponent(jLabel9)
                                             .addComponent(jLabel8))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(strategyCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                .addComponent(pointsNumField, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
-                                                .addComponent(learningRateField)))))
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(pointsNumField)
+                                            .addComponent(learningRateField)
+                                            .addComponent(strategyCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addComponent(jSeparator2)
                             .addComponent(jSeparator3))
@@ -315,8 +315,10 @@ public class GUI extends javax.swing.JFrame {
 
             generator.generateErrorChart(meanSquaredErrors);
             generator.generateExemplaryDataChart(inputDataSet, dataSetGenerator, network.getSlope(), network.getIntercept());
+
+            JOptionPane.showMessageDialog(this, "Wygenerowano wykresy");
         } catch (CannotCreateNetworkException | IOException ex) {
-            Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_startButtonActionPerformed
 

@@ -13,18 +13,18 @@ import java.util.List;
  *
  * @author Wojciech Szałapski
  */
-public class PerceptronStrategy implements NeuronStrategy {
+public class WidrowHoffHeavisideStrategy implements NeuronStrategy {
 
-    protected PerceptronStrategy() {
+    protected WidrowHoffHeavisideStrategy() {
     }
 
-    public static PerceptronStrategy getInstance() {
-        return PerceptronStrategyHolder.INSTANCE;
+    public static WidrowHoffHeavisideStrategy getInstance() {
+        return WidrowHoffHeavisideStrategyHolder.INSTANCE;
     }
 
-    private static class PerceptronStrategyHolder {
+    private static class WidrowHoffHeavisideStrategyHolder {
 
-        private static final PerceptronStrategy INSTANCE = new PerceptronStrategy();
+        private static final WidrowHoffHeavisideStrategy INSTANCE = new WidrowHoffHeavisideStrategy();
     }
 
     @Override
@@ -68,6 +68,6 @@ public class PerceptronStrategy implements NeuronStrategy {
 
     @Override
     public String toString() {
-        return "Perceptron";
+        return "Widrow-Hoff - Heaviside";
     }
 }
