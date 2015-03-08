@@ -33,9 +33,11 @@ public class App {
             network = factory.createNetwork();
 
             DataSetGenerator dataSetGenerator = new LinearlySeparableDataSetGenerator(0.5, 25, 0, 100);
-            List<InputRow> inputDataSet = dataSetGenerator.generateData(50);
 
-            NetworkTrainer networkTrainer = new EpochNetworkTrainer(20, 0.3);
+            List<InputRow> inputDataSet = dataSetGenerator.generateData(1000);
+            
+            NetworkTrainer networkTrainer = new EpochNetworkTrainer(500, 0.3);
+
             List<Double> meanSquaredErrors = networkTrainer.trainNetwork(network, inputDataSet);
 
             for (Double error : meanSquaredErrors) {

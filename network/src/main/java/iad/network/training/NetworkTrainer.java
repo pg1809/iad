@@ -13,13 +13,16 @@ public abstract class NetworkTrainer {
 
     private final static double DEFAULT_LEARNING_RATE = 0.1;
 
-    private double learningRate = DEFAULT_LEARNING_RATE;
+    protected double learningRate = DEFAULT_LEARNING_RATE;
 
     public abstract List<Double> trainNetwork(AbstractNetwork network, List<InputRow> trainingData);
 
     protected double trainNetworkWithSampleSet(AbstractNetwork network, List<InputRow> trainingData) {
         for (InputRow trainingDataSample : trainingData) {
             network.readSample(trainingDataSample.getValues());
+//            System.out.println("Sample " + trainingDataSample.getValues()[0]
+//                    + " " + trainingDataSample.getValues()[1] + " "
+//                    + trainingDataSample.getExpectedOutput()[0]);
             trainNetworkFedWithSample(network, trainingDataSample.getExpectedOutput());
         }
 

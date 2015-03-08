@@ -40,5 +40,10 @@ public class SingleNeuronNetwork extends AbstractNetwork {
         for (int i = 0; i < neuronInputs.size(); ++i) {
             System.out.println("Input " + i + " : " + neuronInputs.get(i).getWeight());
         }
+        
+        double w0 = neuron.getBias();
+        double w1 = neuronInputs.get(0).getWeight();
+        double w2 = neuronInputs.get(1).getWeight();
+        System.out.println("line: " + (-w1 / w2) + " * x + " + (-w0 / w2));
     }
 }
