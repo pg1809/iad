@@ -11,6 +11,7 @@ import iad.network.strategy.NeuronStrategy;
 import iad.network.strategy.PerceptronStrategy;
 import iad.network.training.EpochNetworkTrainer;
 import iad.network.training.NetworkTrainer;
+import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,14 +34,18 @@ public class App {
 
             DataSetGenerator dataSetGenerator = new LinearlySeparableDataSetGenerator(0.5, 25, 0, 100);
             List<InputRow> inputDataSet = dataSetGenerator.generateData(50);
-            
+
             NetworkTrainer networkTrainer = new EpochNetworkTrainer(20, 0.3);
             List<Double> meanSquaredErrors = networkTrainer.trainNetwork(network, inputDataSet);
-            
+
             for (Double error : meanSquaredErrors) {
                 System.out.println(error);
             }
-        } catch (CannotCreateNetworkException ex) {
+
+            PlotGenerator generator = new PlotGenerator();
+            generator.generateErrorChart(meanSquaredErrors);
+            generator.generateExemplaryDataChart(inputDataSet, (LinearlySeparableDataSetGenerator) dataSetGenerator);
+        } catch (CannotCreateNetworkException | IOException ex) {
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
