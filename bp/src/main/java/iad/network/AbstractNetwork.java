@@ -36,6 +36,10 @@ public abstract class AbstractNetwork {
         return outputLayer.updateAndGetOutput();
     }
 
+    public void addHiddenLayer(NeuronLayer layer) {
+        hiddenLayers.add(layer);
+    }
+
     public NeuronLayer getInputLayer() {
         return inputLayer;
     }
