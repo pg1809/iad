@@ -7,7 +7,6 @@ package iad.network.strategy.single;
 
 import iad.network.neuron.*;
 import iad.network.strategy.BasicNeuronStrategy;
-import java.util.List;
 
 /**
  *
@@ -37,22 +36,7 @@ public class WidrowHoffHeavisideStrategy extends BasicNeuronStrategy {
     }
 
     @Override
-    public void updateBias(AbstractNeuron neuron, double delta) {
-        neuron.setBias(neuron.getBias() + delta);
-    }
-
-    @Override
-    public void updateWeights(AbstractNeuron neuron, double delta) {
-        List<NeuronInput> inputNeurons = neuron.getInputNeurons();
-        for (int i = 0; i < inputNeurons.size(); ++i) {
-            NeuronInput currentInput = inputNeurons.get(i);
-            double currentWeight = currentInput.getWeight();
-            currentInput.setWeight(currentWeight + delta * currentInput.getInputNeuron().getOutput());
-        }
-    }
-
-    @Override
-    public void updateDelta(AbstractNeuron neuron, double expectedOutput, double learningRate) {
+    public void updateDelta(AbstractNeuron neuron, Double expectedOutput, double learningRate) {
         neuron.setDelta(learningRate * (expectedOutput - neuron.getOutput()));
     }
 

@@ -24,8 +24,17 @@ public abstract class AbstractNetwork {
             inputNeurons.get(i).setOutput(sample[i]);
         }
     }
-    
-    public abstract double[] runNetwork(double[] sample);
+
+    public double[] runNetwork(double[] sample) {
+        readSample(sample);
+
+        inputLayer.updateOutput();
+        for (NeuronLayer hiddenLayer : hiddenLayers) {
+            hiddenLayer.updateOutput();
+        }
+
+        return outputLayer.updateAndGetOutput();
+    }
 
     public NeuronLayer getInputLayer() {
         return inputLayer;

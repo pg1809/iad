@@ -64,6 +64,18 @@ public abstract class AbstractNeuron {
         return forwardNeurons.isEmpty();
     }
 
+    public double findForwardConnectionWeight(int forwardNeuronIndex) {
+        AbstractNeuron forwardNeuron = forwardNeurons.get(forwardNeuronIndex);
+
+        for (NeuronInput neuronInput : forwardNeuron.getInputNeurons()) {
+            if (neuronInput.getInputNeuron() == this) {
+                return neuronInput.getWeight();
+            }
+        }
+
+        throw new RuntimeException("Neuron not found on the inputs list of given forward neuron");
+    }
+
     public double getNetValue() {
         return netValue;
     }

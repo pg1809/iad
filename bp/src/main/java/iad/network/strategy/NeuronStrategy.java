@@ -18,5 +18,5 @@ public interface NeuronStrategy {
     
     public void updateWeights(AbstractNeuron neuron, double delta);
     
-    public void updateDelta(AbstractNeuron neuron, double expectedOutput, double learningRate);
+    public void updateDelta(AbstractNeuron neuron, Double expectedOutput, double learningRate);
 }
