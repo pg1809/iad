@@ -3,17 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package iad.network.strategy;
+package iad.network.strategy.single;
 
 import iad.network.neuron.*;
-import java.util.Collection;
+import iad.network.strategy.BasicNeuronStrategy;
 import java.util.List;
 
 /**
  *
  * @author Wojciech Szałapski
  */
-public class WidrowHoffHeavisideStrategy implements NeuronStrategy {
+public class WidrowHoffHeavisideStrategy extends BasicNeuronStrategy {
 
     protected WidrowHoffHeavisideStrategy() {
     }
@@ -34,16 +34,6 @@ public class WidrowHoffHeavisideStrategy implements NeuronStrategy {
         } else {
             return 0;
         }
-    }
-
-    @Override
-    public double calculateNetValue(Collection<NeuronInput> inputNeurons, double bias) {
-        double netValue = bias;
-        for (NeuronInput neuron : inputNeurons) {
-            netValue += neuron.getInputNeuron().getOutput() * neuron.getWeight();
-        }
-
-        return netValue;
     }
 
     @Override

@@ -11,7 +11,7 @@ import java.util.List;
 public abstract class AbstractNeuron {
 
     protected double netValue;
-    
+
     protected double output;
 
     protected double bias;
@@ -27,7 +27,7 @@ public abstract class AbstractNeuron {
     public void updateNetValue() {
         netValue = strategy.calculateNetValue(inputNeurons, bias);
     }
-    
+
     public void updateOutput() {
         updateNetValue();
         output = strategy.transfer(netValue);
@@ -42,12 +42,26 @@ public abstract class AbstractNeuron {
         strategy.updateWeights(this, delta);
     }
 
+    public void updateNeuron(double expectedOutput, double learningRate) {
+        updateOutput();
+        updateDelta(expectedOutput, learningRate);
+        updateParameters();
+    }
+
     public void addForwardNeuron(AbstractNeuron neuron) {
         forwardNeurons.add(neuron);
     }
 
     public void addInputNeuron(NeuronInput inputNeuron) {
         inputNeurons.add(inputNeuron);
+    }
+
+    public boolean isInputNeuron() {
+        return inputNeurons.isEmpty();
+    }
+
+    public boolean isOutputNeuron() {
+        return forwardNeurons.isEmpty();
     }
 
     public double getNetValue() {

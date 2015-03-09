@@ -20,16 +20,7 @@ public class SingleNeuronNetwork extends AbstractNetwork {
     public double[] runNetwork(double[] sample) {
         readSample(sample);
 
-        int outputNeuronsCount = outputLayer.getNeurons().size();
-        double[] result = new double[outputNeuronsCount];
-
-        for (int i = 0; i < outputNeuronsCount; ++i) {
-            AbstractNeuron currentNeuron = outputLayer.getNeurons().get(i);
-            currentNeuron.updateOutput();
-            result[i] = currentNeuron.getOutput();
-        }
-
-        return result;
+        return outputLayer.updateAndGetOutput();
     }
 
     public void printNeuron() {

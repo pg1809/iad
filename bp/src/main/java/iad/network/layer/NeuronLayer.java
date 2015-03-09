@@ -16,6 +16,25 @@ public class NeuronLayer {
         neurons.add(neuron);
     }
 
+    public void updateOutput() {
+        for (AbstractNeuron neuron : neurons) {
+            neuron.updateOutput();
+        }
+    }
+
+    public double[] updateAndGetOutput() {
+        int neuronsCount = neurons.size();
+        double[] result = new double[neuronsCount];
+
+        for (int i = 0; i < neuronsCount; ++i) {
+            AbstractNeuron currentNeuron = neurons.get(i);
+            currentNeuron.updateOutput();
+            result[i] = currentNeuron.getOutput();
+        }
+
+        return result;
+    }
+
     public List<AbstractNeuron> getNeurons() {
         return neurons;
     }

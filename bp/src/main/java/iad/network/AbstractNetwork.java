@@ -14,7 +14,7 @@ public abstract class AbstractNetwork {
 
     protected NeuronLayer inputLayer = new NeuronLayer();
 
-    protected Collection<NeuronLayer> hiddenLayers = new ArrayList<>();
+    protected List<NeuronLayer> hiddenLayers = new ArrayList<>();
 
     protected NeuronLayer outputLayer = new NeuronLayer();
 
@@ -39,7 +39,7 @@ public abstract class AbstractNetwork {
         return hiddenLayers;
     }
 
-    public void setHiddenLayers(Collection<NeuronLayer> hiddenLayers) {
+    public void setHiddenLayers(List<NeuronLayer> hiddenLayers) {
         this.hiddenLayers = hiddenLayers;
     }
 
