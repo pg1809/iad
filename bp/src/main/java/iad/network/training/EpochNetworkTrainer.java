@@ -1,7 +1,6 @@
 package iad.network.training;
 
 import iad.network.AbstractNetwork;
-import iad.network.SingleNeuronNetwork;
 import iad.network.input.InputRow;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,12 +24,6 @@ public class EpochNetworkTrainer extends NetworkTrainer {
         List<Double> meanSquaredErrors = new ArrayList<>();
 
         for (int i = 0; i < numberOfEpochs; ++i) {
-            System.out.println("\nEpoch " + i);
-
-            System.out.println("Parameters at the beginning:");
-            ((SingleNeuronNetwork) network).printNeuron();
-            System.out.println("");
-
             Collections.shuffle(trainingData);
             meanSquaredErrors.add(trainNetworkWithSampleSet(network, trainingData));
         }

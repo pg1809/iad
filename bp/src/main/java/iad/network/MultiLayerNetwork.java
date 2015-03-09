@@ -11,11 +11,6 @@ import iad.network.weight.RandomWeightsGenerator;
  */
 public class MultiLayerNetwork extends AbstractNetwork {
 
-    @Override
-    public double[] runNetwork(double[] sample) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     private void connectLayers(NeuronLayer backLayer, NeuronLayer forwardLayer) {
         double[][] weights = generateWeightsForConnection(backLayer, forwardLayer);
 

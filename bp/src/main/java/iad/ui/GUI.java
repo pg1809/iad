@@ -11,6 +11,7 @@ import iad.network.exceptions.CannotCreateNetworkException;
 import iad.network.factory.SingleNeuronNetworkFactory;
 import iad.network.input.InputRow;
 import iad.network.strategy.NeuronStrategy;
+import iad.network.strategy.bp.BackPropagationStrategy;
 import iad.network.strategy.single.WidrowHoffHeavisideStrategy;
 import iad.network.strategy.single.WidrowHoffSigmoidStrategy;
 import iad.network.training.EpochNetworkTrainer;
@@ -54,6 +55,7 @@ public class GUI extends javax.swing.JFrame {
 
         strategyCombo.addItem(WidrowHoffHeavisideStrategy.getInstance());
         strategyCombo.addItem(WidrowHoffSigmoidStrategy.getInstance());
+        strategyCombo.addItem(BackPropagationStrategy.getInstance());
 
         targetErrorLabel.setVisible(false);
         targetErrorField.setVisible(false);

@@ -44,4 +44,9 @@ public class BackPropagationStrategy extends BasicNeuronStrategy {
         
         neuron.setDelta(learningRate * error * neuron.getOutput() * (1 - neuron.getOutput()));
     }
+
+    @Override
+    public String toString() {
+        return "Back propagation";
+    }
 }
