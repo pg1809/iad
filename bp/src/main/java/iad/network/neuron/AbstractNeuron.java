@@ -15,6 +15,8 @@ public abstract class AbstractNeuron {
     protected double output;
 
     protected double bias;
+    
+    protected double previousBias;
 
     protected double delta;
 
@@ -37,15 +39,15 @@ public abstract class AbstractNeuron {
         strategy.updateDelta(this, expectedOutput, learningRate);
     }
 
-    public void updateParameters() {
-        strategy.updateBias(this, delta);
-        strategy.updateWeights(this, delta);
+    public void updateParameters(double momentumFactor) {
+        strategy.updateBias(this, delta, momentumFactor);
+        strategy.updateWeights(this, delta, momentumFactor);
     }
 
-    public void updateNeuron(double expectedOutput, double learningRate) {
+    public void updateNeuron(double expectedOutput, double learningRate, double momentumFactor) {
         updateOutput();
         updateDelta(expectedOutput, learningRate);
-        updateParameters();
+        updateParameters(momentumFactor);
     }
 
     public void addForwardNeuron(AbstractNeuron neuron) {
@@ -97,7 +99,17 @@ public abstract class AbstractNeuron {
     }
 
     public void setBias(double bias) {
+        this.previousBias = this.bias;
+        
         this.bias = bias;
+    }
+
+    public double getPreviousBias() {
+        return previousBias;
+    }
+
+    public void setPreviousBias(double previousBias) {
+        this.previousBias = previousBias;
     }
 
     public double getDelta() {

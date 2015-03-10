@@ -41,6 +41,7 @@ public class SingleNeuronNetworkFactory implements NetworkFactory {
 
         double[] weights = weightsGenerator.generateWeights();
         neuron.setBias(weights[0]);
+        neuron.setPreviousBias(weights[0]);
         for (int i = 1; i <= inputs; ++i) {
             Neuron inputNeuron = new Neuron(strategy);
             inputLayer.addNeuron(inputNeuron);

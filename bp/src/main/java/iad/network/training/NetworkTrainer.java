@@ -13,7 +13,11 @@ public abstract class NetworkTrainer {
 
     private final static double DEFAULT_LEARNING_RATE = 0.1;
 
+    private final static double DEFAULT_MOMENTUM_FACTOR = 0;
+    
     protected double learningRate = DEFAULT_LEARNING_RATE;
+    
+    protected double momentumFactor = DEFAULT_MOMENTUM_FACTOR;
 
     public abstract List<Double> trainNetwork(AbstractNetwork network, List<InputRow> trainingData);
 
@@ -51,10 +55,10 @@ public abstract class NetworkTrainer {
         }
 
         for (NeuronLayer hiddenLayer : hiddenLayers) {
-            hiddenLayer.updateParameters();
+            hiddenLayer.updateParameters(momentumFactor);
         }
 
-        network.getOutputLayer().updateParameters();
+        network.getOutputLayer().updateParameters(momentumFactor);
     }
 
     public double getLearningRate() {

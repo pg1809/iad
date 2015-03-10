@@ -22,17 +22,20 @@ public abstract class BasicNeuronStrategy implements NeuronStrategy {
     }
 
     @Override
-    public void updateBias(AbstractNeuron neuron, double delta) {
-        neuron.setBias(neuron.getBias() + delta);
+    public void updateBias(AbstractNeuron neuron, double delta, double momentumFactor) {
+        neuron.setBias(neuron.getBias() + delta
+                + momentumFactor * (neuron.getBias() - neuron.getPreviousBias()));
     }
 
     @Override
-    public void updateWeights(AbstractNeuron neuron, double delta) {
+    public void updateWeights(AbstractNeuron neuron, double delta, double momentumFactor) {
         List<NeuronInput> inputNeurons = neuron.getInputNeurons();
         for (int i = 0; i < inputNeurons.size(); ++i) {
             NeuronInput currentInput = inputNeurons.get(i);
             double currentWeight = currentInput.getWeight();
-            currentInput.setWeight(currentWeight + delta * currentInput.getInputNeuron().getOutput());
+            double previousWeight = currentInput.getPreviousWeight();
+            currentInput.setWeight(currentWeight + delta * currentInput.getInputNeuron().getOutput()
+                    + momentumFactor * (currentWeight - previousWeight));
         }
     }
 }

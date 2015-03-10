@@ -27,11 +27,11 @@ public class App {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        transformation(100000, 0.00001, 0.05, true);
+        transformation(100000, 0.0001, 0.05, 0.9, true);
     }
 
     private static void transformation(int maximumNumberOfEpochs, double errorThreshold,
-            double learningRate, boolean useBias) {
+            double learningRate, double momentumFactor, boolean useBias) {
         BackPropagationStrategy strategy = BackPropagationStrategy.getInstance();
 
         for (int neuronsInHidden = 1; neuronsInHidden <= 3; ++neuronsInHidden) {
@@ -49,7 +49,8 @@ public class App {
                     trainingData.add(new InputRow(input, input));
                 }
 
-                ThresholdEpochNetworkTrainer trainer = new ThresholdEpochNetworkTrainer(maximumNumberOfEpochs, errorThreshold, learningRate);
+                ThresholdEpochNetworkTrainer trainer
+                        = new ThresholdEpochNetworkTrainer(maximumNumberOfEpochs, errorThreshold, learningRate, momentumFactor);
                 List<Double> meanSquaredError = trainer.trainNetwork(network, trainingData);
 
                 System.out.println("Number of epochs: " + meanSquaredError.size());

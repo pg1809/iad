@@ -16,10 +16,12 @@ public class ThresholdEpochNetworkTrainer extends NetworkTrainer {
 
     private final double errorThreshold;
 
-    public ThresholdEpochNetworkTrainer(int maximumNumberOfEpochs, double errorThreshold, double learningRate) {
+    public ThresholdEpochNetworkTrainer(int maximumNumberOfEpochs, double errorThreshold,
+            double learningRate, double momentumFactor) {
         this.maximumNumberOfEpochs = maximumNumberOfEpochs;
         this.errorThreshold = errorThreshold;
         this.learningRate = learningRate;
+        this.momentumFactor = momentumFactor;
     }
 
     @Override

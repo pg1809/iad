@@ -48,9 +48,9 @@ public class NeuronLayer {
         }
     }
 
-    public void updateParameters() {
+    public void updateParameters(double momentumFactor) {
         for (AbstractNeuron neuron : neurons) {
-            neuron.updateParameters();
+            neuron.updateParameters(momentumFactor);
         }
     }
 

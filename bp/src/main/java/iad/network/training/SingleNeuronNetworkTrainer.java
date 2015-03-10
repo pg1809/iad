@@ -18,7 +18,7 @@ public abstract class SingleNeuronNetworkTrainer extends NetworkTrainer {
         int outputNeuronsCount = outputNeurons.size();
 
         for (int i = 0; i < outputNeuronsCount; ++i) {
-            outputNeurons.get(i).updateNeuron(expectedOutput[i], learningRate);
+            outputNeurons.get(i).updateNeuron(expectedOutput[i], learningRate, momentumFactor);
         }
     }
 }

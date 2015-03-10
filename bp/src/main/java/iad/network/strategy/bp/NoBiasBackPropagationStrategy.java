@@ -16,7 +16,7 @@ public class NoBiasBackPropagationStrategy extends BackPropagationStrategy {
     }
 
     @Override
-    public void updateBias(AbstractNeuron neuron, double delta) {
+    public void updateBias(AbstractNeuron neuron, double delta, double momentumFactor) {
         // This method should be empty with no bias strategy
     }
     

@@ -14,9 +14,10 @@ public class EpochNetworkTrainer extends SingleNeuronNetworkTrainer {
 
     private final int numberOfEpochs;
 
-    public EpochNetworkTrainer(int numberOfEpochs, double learningRate) {
+    public EpochNetworkTrainer(int numberOfEpochs, double learningRate, double momentumFactor) {
         this.numberOfEpochs = numberOfEpochs;
         this.learningRate = learningRate;
+        this.momentumFactor = momentumFactor;
     }
 
     @Override

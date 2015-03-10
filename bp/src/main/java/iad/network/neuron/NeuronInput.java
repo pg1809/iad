@@ -10,9 +10,13 @@ public class NeuronInput {
 
     private double weight;
 
+    private double previousWeight;
+
     public NeuronInput(AbstractNeuron inputNeuron, double weight) {
         this.inputNeuron = inputNeuron;
         this.weight = weight;
+
+        this.previousWeight = weight;
     }
 
     public AbstractNeuron getInputNeuron() {
@@ -28,6 +32,16 @@ public class NeuronInput {
     }
 
     public void setWeight(double weight) {
+        this.previousWeight = this.weight;
+
         this.weight = weight;
+    }
+
+    public double getPreviousWeight() {
+        return previousWeight;
+    }
+
+    public void setPreviousWeight(double previousWeight) {
+        this.previousWeight = previousWeight;
     }
 }
