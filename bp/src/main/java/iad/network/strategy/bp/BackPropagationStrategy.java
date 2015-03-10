@@ -2,7 +2,6 @@ package iad.network.strategy.bp;
 
 import iad.network.neuron.AbstractNeuron;
 import iad.network.strategy.BasicNeuronStrategy;
-import iad.network.strategy.single.WidrowHoffHeavisideStrategy;
 import java.util.List;
 
 /**

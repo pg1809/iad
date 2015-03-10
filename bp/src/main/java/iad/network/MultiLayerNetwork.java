@@ -4,6 +4,9 @@ import iad.network.layer.NeuronLayer;
 import iad.network.neuron.AbstractNeuron;
 import iad.network.neuron.NeuronInput;
 import iad.network.weight.RandomWeightsGenerator;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  *
@@ -53,5 +56,13 @@ public class MultiLayerNetwork extends AbstractNetwork {
         }
 
         connectLayers(hiddenLayers.get(hiddenLayers.size() - 1), outputLayer);
+    }
+    
+    public void printNetworkInputs() {
+        List<Double> inputs = new ArrayList<>();
+        for (AbstractNeuron neuron: inputLayer.getNeurons()) {
+            inputs.add(neuron.getOutput());
+        }
+        System.out.println(Arrays.toString(inputs.toArray()));
     }
 }

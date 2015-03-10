@@ -33,7 +33,7 @@ public abstract class AbstractNeuron {
         output = strategy.transfer(netValue);
     }
 
-    public void updateDelta(double expectedOutput, double learningRate) {
+    public void updateDelta(Double expectedOutput, double learningRate) {
         strategy.updateDelta(this, expectedOutput, learningRate);
     }
 

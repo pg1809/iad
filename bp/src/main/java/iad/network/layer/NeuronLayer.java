@@ -35,6 +35,25 @@ public class NeuronLayer {
         return result;
     }
 
+    public void updateDelta(double[] expectedOutput, double learningRate) {
+        int neuronsCount = neurons.size();
+
+        for (int i = 0; i < neuronsCount; ++i) {
+            Double expectedOutputForNeuron = null;
+            if (expectedOutput != null) {
+                expectedOutputForNeuron = expectedOutput[i];
+            }
+
+            neurons.get(i).updateDelta(expectedOutputForNeuron, learningRate);
+        }
+    }
+
+    public void updateParameters() {
+        for (AbstractNeuron neuron : neurons) {
+            neuron.updateParameters();
+        }
+    }
+
     public List<AbstractNeuron> getNeurons() {
         return neurons;
     }

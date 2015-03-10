@@ -10,7 +10,7 @@ import java.util.List;
  *
  * @author Wojciech Szałapski
  */
-public class EpochNetworkTrainer extends NetworkTrainer {
+public class EpochNetworkTrainer extends SingleNeuronNetworkTrainer {
 
     private final int numberOfEpochs;
 

@@ -5,7 +5,9 @@ import iad.network.exceptions.CannotCreateNetworkException;
 import iad.network.layer.NeuronLayer;
 import iad.network.neuron.AbstractNeuron;
 import iad.network.neuron.Neuron;
+import iad.network.strategy.InputNeuronStrategy;
 import iad.network.strategy.NeuronStrategy;
+import java.util.Random;
 
 /**
  *
@@ -17,6 +19,8 @@ public class MultiLayerNetworkFactory implements NetworkFactory {
 
     private NeuronStrategy strategy;
 
+    Random generator = new Random();
+
     public MultiLayerNetworkFactory(int[] neuronsNumberPerLayer, NeuronStrategy strategy) {
         this.neuronsNumberPerLayer = neuronsNumberPerLayer;
         this.strategy = strategy;
@@ -26,15 +30,15 @@ public class MultiLayerNetworkFactory implements NetworkFactory {
     public MultiLayerNetwork createNetwork() throws CannotCreateNetworkException {
         MultiLayerNetwork network = new MultiLayerNetwork();
 
-        NeuronLayer inputLayer = createLayerWithNeurons(neuronsNumberPerLayer[0]);
+        NeuronLayer inputLayer = createLayerWithNeurons(neuronsNumberPerLayer[0], InputNeuronStrategy.getInstance());
         network.setInputLayer(inputLayer);
 
         int numberOfLayers = neuronsNumberPerLayer.length;
         for (int i = 1; i < numberOfLayers - 1; ++i) {
-            network.addHiddenLayer(createLayerWithNeurons(neuronsNumberPerLayer[i]));
+            network.addHiddenLayer(createLayerWithNeurons(neuronsNumberPerLayer[i], strategy));
         }
 
-        NeuronLayer outputLayer = createLayerWithNeurons(neuronsNumberPerLayer[numberOfLayers - 1]);
+        NeuronLayer outputLayer = createLayerWithNeurons(neuronsNumberPerLayer[numberOfLayers - 1], strategy);
         network.setOutputLayer(outputLayer);
 
         network.connectAllLayers();
@@ -42,10 +46,11 @@ public class MultiLayerNetworkFactory implements NetworkFactory {
         return network;
     }
 
-    private NeuronLayer createLayerWithNeurons(int numberOfNeurons) {
+    private NeuronLayer createLayerWithNeurons(int numberOfNeurons, NeuronStrategy layerStrategy) {
         NeuronLayer layer = new NeuronLayer();
         for (int i = 0; i < numberOfNeurons; ++i) {
             AbstractNeuron neuron = new Neuron(strategy);
+            neuron.setBias(generator.nextDouble());
             layer.addNeuron(neuron);
         }
         return layer;

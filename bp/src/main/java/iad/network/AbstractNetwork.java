@@ -3,7 +3,6 @@ package iad.network;
 import iad.network.layer.NeuronLayer;
 import iad.network.neuron.AbstractNeuron;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -27,8 +26,7 @@ public abstract class AbstractNetwork {
 
     public double[] runNetwork(double[] sample) {
         readSample(sample);
-
-        inputLayer.updateOutput();
+        
         for (NeuronLayer hiddenLayer : hiddenLayers) {
             hiddenLayer.updateOutput();
         }
@@ -48,7 +46,7 @@ public abstract class AbstractNetwork {
         this.inputLayer = inputLayer;
     }
 
-    public Collection<NeuronLayer> getHiddenLayers() {
+    public List<NeuronLayer> getHiddenLayers() {
         return hiddenLayers;
     }
 
