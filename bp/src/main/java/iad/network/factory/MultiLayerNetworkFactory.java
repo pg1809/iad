@@ -17,13 +17,16 @@ public class MultiLayerNetworkFactory implements NetworkFactory {
 
     private final int[] neuronsNumberPerLayer;
 
+    private final boolean useBias;
+
     private NeuronStrategy strategy;
 
     Random generator = new Random();
 
-    public MultiLayerNetworkFactory(int[] neuronsNumberPerLayer, NeuronStrategy strategy) {
+    public MultiLayerNetworkFactory(int[] neuronsNumberPerLayer, NeuronStrategy strategy, boolean useBias) {
         this.neuronsNumberPerLayer = neuronsNumberPerLayer;
         this.strategy = strategy;
+        this.useBias = useBias;
     }
 
     @Override
@@ -50,7 +53,9 @@ public class MultiLayerNetworkFactory implements NetworkFactory {
         NeuronLayer layer = new NeuronLayer();
         for (int i = 0; i < numberOfNeurons; ++i) {
             AbstractNeuron neuron = new Neuron(strategy);
-            neuron.setBias(generator.nextDouble());
+            if (useBias) {
+                neuron.setBias(generator.nextDouble());
+            }
             layer.addNeuron(neuron);
         }
         return layer;
