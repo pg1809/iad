@@ -10,12 +10,10 @@ import iad.network.exceptions.CannotCreateNetworkException;
 import iad.network.factory.MultiLayerNetworkFactory;
 import iad.network.input.InputRow;
 import iad.network.neuron.AbstractNeuron;
-import iad.network.neuron.Neuron;
 import iad.network.strategy.bp.BackPropagationStrategy;
 import iad.network.strategy.bp.IdentityActivationBPS;
 import iad.network.training.ThresholdEpochNetworkTrainer;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,8 +32,8 @@ public class App {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        //transformation(100000, 0.0001, 0.05, 0.9, true);
-        approximation(2, 0.01, 0.05, 0.2, true);
+//        transformation(100000, 0.0001, 0.05, 0.9, true);
+        approximation(10000, 0.1, 0.005, 0, true);
     }
 
     private static void transformation(int maximumNumberOfEpochs, double errorThreshold,
@@ -128,7 +126,6 @@ public class App {
             }
         } catch (IOException ex) {
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("DUPA");
         }
     }
 }

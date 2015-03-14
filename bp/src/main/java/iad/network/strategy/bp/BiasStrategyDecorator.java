@@ -7,7 +7,6 @@ package iad.network.strategy.bp;
 
 import iad.network.neuron.AbstractNeuron;
 import iad.network.neuron.NeuronInput;
-import iad.network.strategy.BasicNeuronStrategy;
 import iad.network.strategy.NeuronStrategy;
 import java.util.Collection;
 
@@ -48,5 +47,4 @@ public class BiasStrategyDecorator implements NeuronStrategy {
     public void updateWeights(AbstractNeuron neuron, double delta, double momentumFactor) {
         decorated.updateWeights(neuron, delta, momentumFactor);
     }
-
 }
