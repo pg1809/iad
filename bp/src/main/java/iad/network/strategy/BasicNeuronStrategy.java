@@ -23,8 +23,6 @@ public abstract class BasicNeuronStrategy implements NeuronStrategy {
 
     @Override
     public void updateBias(AbstractNeuron neuron, double delta, double momentumFactor) {
-        neuron.setBias(neuron.getBias() + delta
-                + momentumFactor * (neuron.getBias() - neuron.getPreviousBias()));
     }
 
     @Override

@@ -6,6 +6,7 @@ import iad.network.layer.NeuronLayer;
 import iad.network.neuron.AbstractNeuron;
 import iad.network.neuron.Neuron;
 import iad.network.strategy.NeuronStrategy;
+import iad.network.strategy.bp.BiasStrategyDecorator;
 import java.util.Random;
 
 /**
@@ -24,8 +25,12 @@ public class MultiLayerNetworkFactory implements NetworkFactory {
     
     public MultiLayerNetworkFactory(int[] neuronsNumberPerLayer, NeuronStrategy strategy, boolean useBias) {
         this.neuronsNumberPerLayer = neuronsNumberPerLayer;
-        this.strategy = strategy;
         this.useBias = useBias;
+        
+        if (useBias) {
+            strategy = new BiasStrategyDecorator(strategy);
+        }
+        this.strategy = strategy;
     }
     
     @Override
