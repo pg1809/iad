@@ -37,6 +37,10 @@ public class PlotGenerator {
         this.chartWidth = chartWidth;
         this.chartHeight = chartHeight;
     }
+    
+    public PlotGenerator() {
+        this(1024, 768);
+    }
 
     public void generateErrorChart(List<Double> errors) throws IOException {
         XYSeries data = new XYSeries("Errors");

@@ -33,9 +33,9 @@ public class App {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-//        transformation(100000, 0.0001, 0.05, 0.9, true);
+        transformation(100000, 0.0001, 0.05, 0.9, true);
 //        approximation(100000, 0.1, 0.005, 0, true);
-        classification(100000, 0.01, 0.01, 0.9);
+//        classification(100000, 0.01, 0.01, 0.9);
     }
 
     private static void classification(int maximumNumberOfEpochs, double errorThreshold,
@@ -52,7 +52,7 @@ public class App {
                     = new ThresholdEpochNetworkTrainer(maximumNumberOfEpochs, errorThreshold, learningRate, momentumFactor);
             List<Double> meanSquaredError = trainer.trainNetwork(network, trainingData);
 
-            PlotGenerator plotGenerator = new PlotGenerator(1024, 768);
+            PlotGenerator plotGenerator = new PlotGenerator();
             plotGenerator.generateErrorChart(meanSquaredError);
         } catch (IOException | CannotCreateNetworkException ex) {
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
@@ -61,6 +61,8 @@ public class App {
 
     private static void transformation(int maximumNumberOfEpochs, double errorThreshold,
             double learningRate, double momentumFactor, boolean useBias) {
+
+        PlotGenerator plotGenerator = new PlotGenerator();
         BackPropagationStrategy strategy = BackPropagationStrategy.getInstance();
 
         for (int neuronsInHidden = 1; neuronsInHidden <= 3; ++neuronsInHidden) {
@@ -82,6 +84,8 @@ public class App {
                         = new ThresholdEpochNetworkTrainer(maximumNumberOfEpochs, errorThreshold, learningRate, momentumFactor);
                 List<Double> meanSquaredError = trainer.trainNetwork(network, trainingData);
 
+                plotGenerator.generateErrorChart(meanSquaredError);
+
                 System.out.println("Number of epochs: " + meanSquaredError.size());
 
                 System.out.println("Results:");
@@ -91,7 +95,7 @@ public class App {
                 }
                 System.out.println("");
 
-            } catch (CannotCreateNetworkException ex) {
+            } catch (CannotCreateNetworkException | IOException ex) {
                 Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -116,7 +120,7 @@ public class App {
                         = new ThresholdEpochNetworkTrainer(maximumNumberOfEpochs, errorThreshold, learningRate, momentumFactor);
                 List<Double> meanSquaredError = trainer.trainNetwork(network, trainingData);
 
-                PlotGenerator plotGenerator = new PlotGenerator(1024, 768);
+                PlotGenerator plotGenerator = new PlotGenerator();
                 plotGenerator.generateErrorChart(meanSquaredError);
 
                 System.out.println("Number of epochs: " + meanSquaredError.size());
