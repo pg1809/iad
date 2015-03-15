@@ -5,15 +5,17 @@
  */
 package iad.network.input;
 
-import iad.network.AbstractNetwork;
+import java.util.List;
 
 /**
  *
  * @author Wojciech Szałapski
  */
 public interface InputProvider {
-    
+
     public boolean hasMoreRows();
+
+    public InputRow provideInputRow();
     
-    public void provideInputRow(AbstractNetwork network);
+    public List<InputRow> provideAllRows();
 }

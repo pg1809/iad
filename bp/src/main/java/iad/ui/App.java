@@ -9,6 +9,7 @@ import iad.network.MultiLayerNetwork;
 import iad.network.exceptions.CannotCreateNetworkException;
 import iad.network.factory.MultiLayerNetworkFactory;
 import iad.network.input.InputRow;
+import iad.network.input.TrainingDataProvider;
 import iad.network.neuron.AbstractNeuron;
 import iad.network.strategy.bp.BackPropagationStrategy;
 import iad.network.strategy.bp.IdentityActivationBPS;
@@ -18,7 +19,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,7 +33,12 @@ public class App {
      */
     public static void main(String[] args) {
 //        transformation(100000, 0.0001, 0.05, 0.9, true);
-        approximation(10000, 0.1, 0.005, 0, true);
+        approximation(100000, 0.1, 0.005, 0, true);
+    }
+
+    private static void classification(int maximumNumberOfEpochs, double errorThreshold,
+            double learningRate, double momentumFactor) {
+
     }
 
     private static void transformation(int maximumNumberOfEpochs, double errorThreshold,
@@ -80,26 +85,21 @@ public class App {
         BackPropagationStrategy strategy = BackPropagationStrategy.getInstance();
         IdentityActivationBPS identityStrategy = IdentityActivationBPS.getInstance();
 
-        for (int neuronsHidden = 1; neuronsHidden <= 1; ++neuronsHidden) {
+        for (int neuronsHidden = 10; neuronsHidden <= 10; ++neuronsHidden) {
             MultiLayerNetworkFactory factory = new MultiLayerNetworkFactory(new int[]{1, neuronsHidden, 1}, strategy, useBias);
             try {
                 MultiLayerNetwork network = factory.createNetwork();
                 network.getOutputLayer().getNeurons().stream().forEach((AbstractNeuron n) -> (n.setStrategy(identityStrategy)));
 
-                List<InputRow> trainingData = new ArrayList<>();
-                List<Double> inputsList = new ArrayList<>();
-                List<Double> outputsList = new ArrayList<>();
-                
-                readApproximationTrainingData("approximation_train_1.txt", inputsList, outputsList);
-                
-                for (int i = 0; i < inputsList.size(); ++i) {
-                    trainingData.add(new InputRow(new double[] {inputsList.get(i)},
-                            new double[] {outputsList.get(i)}));
-                }
+                TrainingDataProvider dataProvider = new TrainingDataProvider(new File("approximation_train_1.txt"), 1, 1, " ");
+                List<InputRow> trainingData = dataProvider.provideAllRows();
 
                 ThresholdEpochNetworkTrainer trainer
                         = new ThresholdEpochNetworkTrainer(maximumNumberOfEpochs, errorThreshold, learningRate, momentumFactor);
                 List<Double> meanSquaredError = trainer.trainNetwork(network, trainingData);
+
+                PlotGenerator plotGenerator = new PlotGenerator(1024, 768);
+                plotGenerator.generateErrorChart(meanSquaredError);
 
                 System.out.println("Number of epochs: " + meanSquaredError.size());
 
@@ -110,22 +110,9 @@ public class App {
                 }
                 System.out.println("");
 
-            } catch (CannotCreateNetworkException ex) {
+            } catch (CannotCreateNetworkException | IOException ex) {
                 Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
-    }
-    
-    private static void readApproximationTrainingData(String fileName, List<Double> inputs, List<Double> outputs) {
-        try (Scanner sc = new Scanner(new File(fileName))) {
-            while (sc.hasNext()) {
-                String line = sc.nextLine();
-                String[] stringNums = line.split(" ");
-                inputs.add(Double.parseDouble(stringNums[0]));
-                outputs.add(Double.parseDouble(stringNums[1]));
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
