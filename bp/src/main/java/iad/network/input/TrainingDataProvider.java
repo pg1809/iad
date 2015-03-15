@@ -12,9 +12,12 @@ import java.util.Scanner;
  */
 public class TrainingDataProvider implements InputProvider {
 
-    private final List<InputRow> dataset;
+    protected List<InputRow> dataset;
 
     int nextRow = 0;
+
+    protected TrainingDataProvider() {
+    }
 
     public TrainingDataProvider(File inputFile, int inputs, int outputs, String separator) throws IOException {
         Scanner sc = new Scanner(inputFile);

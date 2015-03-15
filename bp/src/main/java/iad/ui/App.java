@@ -8,6 +8,7 @@ package iad.ui;
 import iad.network.MultiLayerNetwork;
 import iad.network.exceptions.CannotCreateNetworkException;
 import iad.network.factory.MultiLayerNetworkFactory;
+import iad.network.input.ClassificationDataProvider;
 import iad.network.input.InputRow;
 import iad.network.input.TrainingDataProvider;
 import iad.network.neuron.AbstractNeuron;
@@ -33,12 +34,29 @@ public class App {
      */
     public static void main(String[] args) {
 //        transformation(100000, 0.0001, 0.05, 0.9, true);
-        approximation(100000, 0.1, 0.005, 0, true);
+//        approximation(100000, 0.1, 0.005, 0, true);
+        classification(100000, 0.01, 0.01, 0.9);
     }
 
     private static void classification(int maximumNumberOfEpochs, double errorThreshold,
             double learningRate, double momentumFactor) {
+        try {
+            BackPropagationStrategy strategy = BackPropagationStrategy.getInstance();
+            MultiLayerNetworkFactory factory = new MultiLayerNetworkFactory(new int[]{4, 4, 3}, strategy, true);
+            MultiLayerNetwork network = factory.createNetwork();
 
+            ClassificationDataProvider dataProvider = new ClassificationDataProvider(new File("classification_train.txt"), 4, 3, " ");
+            List<InputRow> trainingData = dataProvider.provideAllRows();
+
+            ThresholdEpochNetworkTrainer trainer
+                    = new ThresholdEpochNetworkTrainer(maximumNumberOfEpochs, errorThreshold, learningRate, momentumFactor);
+            List<Double> meanSquaredError = trainer.trainNetwork(network, trainingData);
+
+            PlotGenerator plotGenerator = new PlotGenerator(1024, 768);
+            plotGenerator.generateErrorChart(meanSquaredError);
+        } catch (IOException | CannotCreateNetworkException ex) {
+            Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private static void transformation(int maximumNumberOfEpochs, double errorThreshold,
