@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package iad.ui;
+package iad.ui.plot;
 
 import iad.network.dataset.LinearlySeparableDataSetGenerator;
 import iad.network.input.InputRow;
@@ -37,12 +37,12 @@ public class PlotGenerator {
         this.chartWidth = chartWidth;
         this.chartHeight = chartHeight;
     }
-    
+
     public PlotGenerator() {
         this(1024, 768);
     }
 
-    public void generateErrorChart(List<Double> errors) throws IOException {
+    public void generateErrorChart(List<Double> errors, String plotName) throws IOException {
         XYSeries data = new XYSeries("Errors");
 
         for (int i = 1; i <= errors.size(); ++i) {
@@ -57,8 +57,12 @@ public class PlotGenerator {
         renderer.setSeriesLinesVisible(0, false);
         chart.getXYPlot().setRenderer(renderer);
 
-        File XYChart = new File("errorChart" + (errorChartId++) + ".png");
+        File XYChart = new File(plotName);
         ChartUtilities.saveChartAsJPEG(XYChart, chart, chartWidth, chartHeight);
+    }
+
+    public void generateErrorChart(List<Double> errors) throws IOException {
+        generateErrorChart(errors, "errorChart" + (errorChartId++) + ".png");
     }
 
     public void generateExemplaryDataChart(List<InputRow> input, LinearlySeparableDataSetGenerator generator,
