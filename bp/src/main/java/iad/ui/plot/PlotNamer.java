@@ -20,6 +20,8 @@ public class PlotNamer {
     private Boolean isBiasUsed;
 
     private Integer hiddenNeurons;
+    
+    private String suffix;
 
     private final DecimalFormat decimalFormat = new DecimalFormat("#.####");
 
@@ -51,6 +53,10 @@ public class PlotNamer {
                 builder.append(" bias");
             }
         }
+        
+        if (suffix != null) {
+            builder.append(suffix);
+        }
 
         builder.append(".png");
 
@@ -79,6 +85,11 @@ public class PlotNamer {
 
     public PlotNamer setHiddenNeurons(int hiddenNeurons) {
         this.hiddenNeurons = hiddenNeurons;
+        return this;
+    }
+    
+    public PlotNamer setSuffix(String suffix) {
+        this.suffix = suffix;
         return this;
     }
 }
