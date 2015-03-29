@@ -5,11 +5,10 @@
  */
 package iad.ui.plot;
 
-import iad.network.dataset.LinearlySeparableDataSetGenerator;
 import iad.network.input.InputRow;
-import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
@@ -42,7 +41,7 @@ public class PlotGenerator {
         this(1024, 768);
     }
 
-    public void generateErrorChart(List<Double> errors, String plotName) throws IOException {
+    public void generateErrorChart(List<Double> errors, String plotFileName) throws IOException {
         XYSeries data = new XYSeries("Errors");
 
         for (int i = 1; i <= errors.size(); ++i) {
@@ -57,7 +56,7 @@ public class PlotGenerator {
         renderer.setSeriesLinesVisible(0, false);
         chart.getXYPlot().setRenderer(renderer);
 
-        File XYChart = new File(plotName);
+        File XYChart = new File(plotFileName);
         ChartUtilities.saveChartAsJPEG(XYChart, chart, chartWidth, chartHeight);
     }
 
@@ -65,57 +64,43 @@ public class PlotGenerator {
         generateErrorChart(errors, "errorChart" + (errorChartId++) + ".png");
     }
 
-    public void generateExemplaryDataChart(List<InputRow> input, LinearlySeparableDataSetGenerator generator,
-            double networkLineSlope, double networkLineIntercept) throws IOException {
+    public void generateResultsChart(ResultsPlotData data, String fileName) throws IOException {
+        XYSeries expectedData = new XYSeries("Expected output");
+        XYSeries networkData = new XYSeries("Network output");
 
-        XYSeries firstClass = new XYSeries("First class");
-        XYSeries secondClass = new XYSeries("Second class");
-        XYSeries separator = new XYSeries("Separator");
-        XYSeries networkSeparator = new XYSeries("Network separator");
-
-        for (InputRow row : input) {
-            double classIdentifier = row.getExpectedOutput()[0];
-            double x = row.getValues()[0];
-            double y = row.getValues()[1];
-            if (classIdentifier != 1) {
-                firstClass.add(x, y);
-            } else {
-                secondClass.add(x, y);
-            }
+        List<double[]> inputs = new ArrayList(data.getInputs().size());
+        data.getInputs().stream().forEach(
+                (InputRow row) -> {inputs.add(row.getValues());}
+            );
+        
+        List<double[]> expectedOutputs = new ArrayList(data.getInputs().size());
+        data.getInputs().stream().forEach(
+                (InputRow row) -> {expectedOutputs.add(row.getExpectedOutput());}
+            );
+        
+        List<double[]> outputs = data.getOutputs();
+        
+        for (int i = 0; i < inputs.size(); ++i) {
+            expectedData.add(inputs.get(i)[0], expectedOutputs.get(i)[0]);
+            networkData.add(inputs.get(i)[0], outputs.get(i)[0]);
         }
 
-        double maxSeparatorX = generator.getUpperBound();
-        double minSeparatorX = generator.getLowerBound();
-        double maxSeparatorY = maxSeparatorX * generator.getSlope() + generator.getIntercept();
-        double minSeparatorY = minSeparatorX * generator.getSlope() + generator.getIntercept();
-
-        separator.add(minSeparatorX, minSeparatorY);
-        separator.add(maxSeparatorX, maxSeparatorY);
-
-        double maxNetworkSeparatorY = maxSeparatorX * networkLineSlope + networkLineIntercept;
-        double minNetworkSeparatorY = minSeparatorX * networkLineSlope + networkLineIntercept;
-
-        networkSeparator.add(minSeparatorX, minNetworkSeparatorY);
-        networkSeparator.add(maxSeparatorX, maxNetworkSeparatorY);
-
         XYSeriesCollection dataset = new XYSeriesCollection();
-        dataset.addSeries(firstClass);
-        dataset.addSeries(secondClass);
-        dataset.addSeries(separator);
-        dataset.addSeries(networkSeparator);
-        JFreeChart chart = ChartFactory.createXYLineChart("Exemplary set of data", "X", "Y", dataset, PlotOrientation.VERTICAL, true, true, true);
+        dataset.addSeries(expectedData);
+        dataset.addSeries(networkData);
+        JFreeChart chart = ChartFactory.createXYLineChart(data.getPlotName(), data.getxAxisLabel(), data.getyAxisLabel(),
+                dataset, PlotOrientation.VERTICAL, true, true, true);
 
         XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
         renderer.setSeriesLinesVisible(0, false);
         renderer.setSeriesLinesVisible(1, false);
-        renderer.setSeriesPaint(0, Color.GREEN);
-        renderer.setSeriesPaint(1, Color.RED);
-
-        renderer.setSeriesPaint(2, Color.YELLOW);
-
         chart.getXYPlot().setRenderer(renderer);
 
-        File XYChart = new File("exemplaryDataChart" + (dataChartId++) + ".png");
+        File XYChart = new File(fileName);
         ChartUtilities.saveChartAsJPEG(XYChart, chart, chartWidth, chartHeight);
+    }
+    
+    public void generateResultsChart(ResultsPlotData data) throws IOException {
+        generateResultsChart(data, "results" + (dataChartId++) + ".png");
     }
 }

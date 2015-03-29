@@ -3,7 +3,10 @@ package iad.network.training;
 import iad.network.AbstractNetwork;
 import iad.network.input.InputRow;
 import iad.network.layer.NeuronLayer;
+import iad.network.neuron.AbstractNeuron;
+import iad.network.neuron.NeuronInput;
 import java.util.List;
+import java.util.Random;
 
 /**
  *
@@ -14,9 +17,9 @@ public abstract class NetworkTrainer {
     private final static double DEFAULT_LEARNING_RATE = 0.1;
 
     private final static double DEFAULT_MOMENTUM_FACTOR = 0;
-    
+
     protected double learningRate = DEFAULT_LEARNING_RATE;
-    
+
     protected double momentumFactor = DEFAULT_MOMENTUM_FACTOR;
 
     public abstract List<Double> trainNetwork(AbstractNetwork network, List<InputRow> trainingData);
@@ -59,6 +62,25 @@ public abstract class NetworkTrainer {
         }
 
         network.getOutputLayer().updateParameters(momentumFactor);
+    }
+
+    protected void generateStartingWeights(AbstractNetwork network) {
+        Random random = new Random();
+        generateStartingWeightsForLayer(network.getInputLayer(), random);
+
+        network.getHiddenLayers().stream()
+                .forEach((NeuronLayer hiddenLayer) -> generateStartingWeightsForLayer(hiddenLayer, random));
+        
+        generateStartingWeightsForLayer(network.getOutputLayer(), random);
+    }
+
+    private void generateStartingWeightsForLayer(NeuronLayer layer, Random random) {
+        for (AbstractNeuron neuron : layer.getNeurons()) {
+            for (NeuronInput input : neuron.getInputNeurons()) {
+                input.setWeight(random.nextDouble() - 0.5);
+            }
+            neuron.setBias(random.nextDouble() - 0.5);
+        }
     }
 
     public double getLearningRate() {

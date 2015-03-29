@@ -26,7 +26,7 @@ public class ClassificationDataProvider extends TrainingDataProvider {
             }
 
             double[] outputValues = new double[outputs];
-            int group = Integer.parseInt(stringNums[inputs]);
+            int group = Integer.parseInt(stringNums[stringNums.length - 1]);
             outputValues[group - 1] = 1;
 
             dataset.add(new InputRow(inputValues, outputValues));
