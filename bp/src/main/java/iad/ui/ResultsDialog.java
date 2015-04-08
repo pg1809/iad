@@ -7,9 +7,7 @@ package iad.ui;
 
 import iad.network.input.InputRow;
 import java.awt.Frame;
-import java.util.Arrays;
 import java.util.List;
-import javax.swing.DefaultListModel;
 
 /**
  *
@@ -24,19 +22,18 @@ public class ResultsDialog extends javax.swing.JDialog {
         super(parent, true);
         initComponents();
         
+        StringBuilder resultsStringBuilder = new StringBuilder();
         for (int i = 0; i < input.size(); ++i) {
-            DefaultListModel model = (DefaultListModel) resultsList.getModel();
-            String entry = new StringBuilder().append("<html>")
-                        .append("<p>input: ")
-                        .append(FormatUtils.doubleArrayToString(input.get(i).getValues())).append("</p>")
-                        .append("<p>network output: ")
-                        .append(FormatUtils.doubleArrayToString(networkOutputs.get(i))).append("</p>")
-                        .append("<p>expected output: ")
-                        .append(FormatUtils.doubleArrayToString(input.get(i).getExpectedOutput())).append("</p>")
-                        .append("<hr />").append("</html>").toString();
-            
-            model.addElement(entry);
+            resultsStringBuilder.append("Input: ")
+                        .append(FormatUtils.doubleArrayToString(input.get(i).getValues())).append("\n")
+                        .append("Network output: ")
+                        .append(FormatUtils.doubleArrayToString(networkOutputs.get(i))).append("\n")
+                        .append("Expected output: ")
+                        .append(FormatUtils.doubleArrayToString(input.get(i).getExpectedOutput())).append("\n")
+                        .append("\n");
         }
+        
+        resultsTextArea.setText(resultsStringBuilder.toString());
     }
 
     /**
@@ -49,16 +46,17 @@ public class ResultsDialog extends javax.swing.JDialog {
     private void initComponents() {
 
         resultsPanel = new javax.swing.JScrollPane();
-        resultsList = new javax.swing.JList();
+        resultsTextArea = new javax.swing.JTextArea();
         headerPanel = new javax.swing.JPanel();
         headerLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Wyniki");
 
-        resultsList.setModel(new DefaultListModel());
-        resultsList.setEnabled(false);
-        resultsPanel.setViewportView(resultsList);
+        resultsTextArea.setEditable(false);
+        resultsTextArea.setColumns(20);
+        resultsTextArea.setRows(5);
+        resultsPanel.setViewportView(resultsTextArea);
 
         headerLabel.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         headerLabel.setText("Wyniki");
@@ -86,7 +84,7 @@ public class ResultsDialog extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel headerLabel;
     private javax.swing.JPanel headerPanel;
-    private javax.swing.JList resultsList;
     private javax.swing.JScrollPane resultsPanel;
+    private javax.swing.JTextArea resultsTextArea;
     // End of variables declaration//GEN-END:variables
 }

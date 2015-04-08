@@ -11,7 +11,7 @@ import java.util.Scanner;
  */
 public class ClassificationDataProvider extends TrainingDataProvider {
 
-    public ClassificationDataProvider(File inputFile, int inputs, int outputs, String separator) throws IOException {
+    public ClassificationDataProvider(File inputFile, int outputs, String separator, int[] inputsNumbers) throws IOException {
         Scanner sc = new Scanner(inputFile);
 
         dataset = new ArrayList<>();
@@ -20,9 +20,9 @@ public class ClassificationDataProvider extends TrainingDataProvider {
             String line = sc.nextLine();
             String[] stringNums = line.split(separator);
 
-            double[] inputValues = new double[inputs];
-            for (int i = 0; i < inputs; ++i) {
-                inputValues[i] = Double.parseDouble(stringNums[i]);
+            double[] inputValues = new double[inputsNumbers.length];
+            for (int i = 0; i < inputsNumbers.length; ++i) {
+                inputValues[i] = Double.parseDouble(stringNums[inputsNumbers[i]]);
             }
 
             double[] outputValues = new double[outputs];
