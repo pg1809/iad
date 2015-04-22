@@ -9,9 +9,8 @@ import iad.network.MultiLayerNetwork;
 import iad.network.exceptions.CannotCreateNetworkException;
 import iad.network.factory.MultiLayerNetworkFactory;
 import iad.network.input.ClassificationDataProvider;
-import iad.network.input.InputProvider;
 import iad.network.input.InputRow;
-import iad.network.input.TrainingDataProvider;
+import iad.network.output.ClassificationMatrixGenerator;
 import iad.network.strategy.bp.BackPropagationStrategy;
 import iad.network.training.ThresholdEpochNetworkTrainer;
 import iad.ui.exceptions.EmptyInputFieldException;
@@ -22,10 +21,10 @@ import java.awt.Frame;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -35,7 +34,9 @@ import javax.swing.JOptionPane;
  */
 public class ClassificationDialog extends javax.swing.JDialog {
 
-    private PlotGenerator plotGenerator;
+    private final PlotGenerator plotGenerator;
+    
+    private final ClassificationMatrixGenerator matrixGenerator;
 
     private MultiLayerNetwork network;
 
@@ -52,8 +53,10 @@ public class ClassificationDialog extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         plotGenerator = new PlotGenerator();
+        matrixGenerator = new ClassificationMatrixGenerator();
 
         networkCreationParamsPanel.fixNetworkOutputField(3);
+        learningParamsInputPanel.setDefaultLearningRate(0.4);
     }
 
     /**
@@ -208,7 +211,18 @@ public class ClassificationDialog extends javax.swing.JDialog {
             List<double[]> networkResults = new ArrayList<>(trainingData.size());
             trainingData.stream().forEach(
                     (InputRow row) -> networkResults.add(network.runNetwork(row.getValues()))
-            );
+                );
+            
+            List<double[]> expectedResults = trainingData.stream()
+                    .map((InputRow row) -> row.getExpectedOutput()).collect(Collectors.toList());
+            
+            int[][] classificationMatrix = 
+                    matrixGenerator.generateClassificationMatrix(expectedResults, networkResults, outputNeurons);
+            matrixGenerator.saveMatrixToFile("classifMatrixTraining.txt", classificationMatrix);
+            
+            ClassificationMatrixDialog matrixDialog = new ClassificationMatrixDialog((Frame) this.getParent(), classificationMatrix);
+            matrixDialog.setVisible(true);
+            
             ResultsDialog results = new ResultsDialog((Frame) this.getParent(), trainingData, networkResults);
             results.setVisible(true);
         } catch (EmptyInputFieldException | IncorrectParamsStringException | IOException ex) {
@@ -237,9 +251,17 @@ public class ClassificationDialog extends javax.swing.JDialog {
             List<InputRow> data = provider.provideAllRows();
 
             List<double[]> networkResults = new ArrayList<>(data.size());
-            for (InputRow row : data) {
-                networkResults.add(network.runNetwork(row.getValues()));
-            }
+            data.stream().forEach((InputRow row) -> networkResults.add(network.runNetwork(row.getValues())));
+            List<double[]> expectedResults = data.stream()
+                    .map((InputRow row) -> row.getExpectedOutput()).collect(Collectors.toList());
+            
+            int[][] classificationMatrix = 
+                    matrixGenerator.generateClassificationMatrix(expectedResults, networkResults, outputNeurons);
+            matrixGenerator.saveMatrixToFile("classifMatrixTest.txt", classificationMatrix);
+            
+            ClassificationMatrixDialog matrixDialog = new ClassificationMatrixDialog((Frame) this.getParent(), classificationMatrix);
+            matrixDialog.setVisible(true);
+            
             ResultsDialog results = new ResultsDialog((Frame) this.getParent(), data, networkResults);
             results.setVisible(true);
         } catch (IOException | IncorrectParamsStringException ex) {

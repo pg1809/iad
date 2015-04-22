@@ -55,6 +55,7 @@ public class ApproximationDialog extends javax.swing.JDialog {
 
         networkCreationParamsPanel.fixNetworkInputsField(1);
         networkCreationParamsPanel.fixNetworkOutputField(1);
+        learningParamsInputPanel.setDefaultLearningRate(0.4);
     }
 
     /**

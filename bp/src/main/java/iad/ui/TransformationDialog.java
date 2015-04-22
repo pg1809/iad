@@ -45,6 +45,7 @@ public class TransformationDialog extends javax.swing.JDialog {
         
         networkCreationParamsPanel.fixNetworkInputsField(4);
         networkCreationParamsPanel.fixNetworkOutputField(4);
+        learningParamsInputPanel.setDefaultLearningRate(0.4);
     }
 
     /**
@@ -173,6 +174,7 @@ public class TransformationDialog extends javax.swing.JDialog {
             trainingData.stream().forEach(
                     (InputRow row) -> networkResults.add(network.runNetwork(row.getValues()))
             );
+            
             ResultsDialog results = new ResultsDialog((Frame) this.getParent(), trainingData, networkResults);
             results.setVisible(true);
         } catch (IOException | EmptyInputFieldException ex) {

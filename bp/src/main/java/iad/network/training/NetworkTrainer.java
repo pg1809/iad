@@ -34,12 +34,11 @@ public abstract class NetworkTrainer {
             double sampleError = 0;
             double[] output = network.runNetwork(trainingDataSample.getValues());
 
-            int outputLength = output.length;
-            for (int i = 0; i < outputLength; ++i) {
+            for (int i = 0; i < output.length; ++i) {
                 sampleError += Math.pow(trainingDataSample.getExpectedOutput()[i] - output[i], 2);
             }
             sampleError /= 2;
-            sampleError /= outputLength;
+            sampleError /= output.length;
 
             meanSquaredError += sampleError;
         }
@@ -54,7 +53,7 @@ public abstract class NetworkTrainer {
 
         List<NeuronLayer> hiddenLayers = network.getHiddenLayers();
         for (int i = hiddenLayers.size() - 1; i >= 0; --i) {
-            network.getHiddenLayers().get(i).updateDelta(null, learningRate);
+            hiddenLayers.get(i).updateDelta(null, learningRate);
         }
 
         for (NeuronLayer hiddenLayer : hiddenLayers) {
@@ -76,9 +75,8 @@ public abstract class NetworkTrainer {
 
     private void generateStartingWeightsForLayer(NeuronLayer layer, Random random) {
         for (AbstractNeuron neuron : layer.getNeurons()) {
-            for (NeuronInput input : neuron.getInputNeurons()) {
-                input.setWeight(random.nextDouble() - 0.5);
-            }
+            neuron.getInputNeurons().stream()
+                    .forEach((NeuronInput input) -> input.setWeight(random.nextDouble() - 0.5));
             neuron.setBias(random.nextDouble() - 0.5);
         }
     }
