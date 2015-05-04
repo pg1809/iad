@@ -6,4 +6,5 @@ package pl.iad.quantization.algorithms.gas.parameters.learning;
  */
 public interface LearningFactorProvider {
 
+    double getLearningFactor(int epochIndex);
 }

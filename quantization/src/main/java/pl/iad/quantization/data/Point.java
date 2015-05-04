@@ -6,29 +6,31 @@ package pl.iad.quantization.data;
  */
 public class Point {
 
-    private double coordinates[];
+    protected double[] weights;
+    
+    private int representative;
 
-    public double dist2(Point target) {
-        double[] targetCoordinates = target.getCoordinates();
-
-        double distance = 0;
-        for (int i = 0; i < coordinates.length; ++i) {
-            distance += (coordinates[i] - targetCoordinates[i])
-                    * (coordinates[i] - targetCoordinates[i]);
-        }
-
-        return distance;
+    public double getWeight(int index) {
+        return weights[index];
     }
 
-    public double dist(Point target) {
-        return Math.sqrt(dist2(target));
+    public void setWeight(int index, double weight) {
+        weights[index] = weight;
     }
 
-    public double[] getCoordinates() {
-        return coordinates;
+    public double[] getWeights() {
+        return weights;
     }
 
-    public void setCoordinates(double[] coordinates) {
-        this.coordinates = coordinates;
+    public void setWeights(double[] weights) {
+        this.weights = weights;
+    }
+
+    public int getRepresentative() {
+        return representative;
+    }
+
+    public void setRepresentative(int representative) {
+        this.representative = representative;
     }
 }

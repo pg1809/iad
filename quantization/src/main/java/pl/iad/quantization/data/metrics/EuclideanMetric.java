@@ -10,8 +10,8 @@ public class EuclideanMetric implements Metric {
 
     @Override
     public double distance(Point source, Point target) {
-        double[] sourceCoordinates = source.getCoordinates();
-        double[] targetCoordinates = target.getCoordinates();
+        double[] sourceCoordinates = source.getWeights();
+        double[] targetCoordinates = target.getWeights();
 
         double result = 0;
         for (int i = 0; i < sourceCoordinates.length; ++i) {
@@ -19,6 +19,6 @@ public class EuclideanMetric implements Metric {
                     * (sourceCoordinates[i] - targetCoordinates[i]);
         }
 
-        return result;
+        return Math.sqrt(result);
     }
 }

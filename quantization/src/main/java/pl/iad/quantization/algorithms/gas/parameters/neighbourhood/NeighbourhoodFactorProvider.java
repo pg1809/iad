@@ -6,4 +6,5 @@ package pl.iad.quantization.algorithms.gas.parameters.neighbourhood;
  */
 public interface NeighbourhoodFactorProvider {
 
+    double getNeighbourhoodFactor(int epochIndex);
 }
