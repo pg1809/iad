@@ -8,7 +8,7 @@ public class PowerNeighbourhoodFactor implements NeighbourhoodFactorProvider {
 
     public final static double DEFAULT_MINIMUM_FACTOR = 0.01;
     
-    private final int maxEpochIndex;
+    private final double maxEpochIndex;
 
     private final double initialFactor;
 

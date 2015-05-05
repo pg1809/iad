@@ -35,7 +35,8 @@ public class GasTestApp {
         int numberOfPoints = 5000;
         int maxAbsCoordinates = 100;
 
-        NeuronCollection collection = new NeuronCollection(numberOfNeurons, 2, maxAbsCoordinates);
+        NeuronCollection collection = new NeuronCollection(numberOfNeurons, 2,
+                maxAbsCoordinates);
 
         LearningFactorProvider learningFactorProvider
                 = new PowerLearningFactor(maxNumberOfEpochs - 1,
@@ -48,7 +49,8 @@ public class GasTestApp {
                         PowerNeighbourhoodFactor.DEFAULT_MINIMUM_FACTOR);
 
         RandomPointsGenerator pointsGenerator = new CircleGenerator();
-        List<Point> input = pointsGenerator.generatePoints(numberOfPoints, maxAbsCoordinates);
+        List<Point> input = pointsGenerator.generatePoints(numberOfPoints,
+                maxAbsCoordinates);
 
         Metric metric = new EuclideanMetric();
 
@@ -56,7 +58,7 @@ public class GasTestApp {
         List<Double> quantizationError = gasTrainer.trainNeurons(collection,
                 input, maxNumberOfEpochs, learningFactorProvider,
                 neighbourhoodFactorProvider, metric);
-        
+
         for (Double error : quantizationError) {
             System.out.println(error);
         }

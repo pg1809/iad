@@ -29,23 +29,21 @@ public class OnlineTrainer implements GasTrainer {
             Metric metric) {
 
         List<Double> quantizationError = new ArrayList<>();
-        List<Point> dataCopy = new ArrayList<>(data);
 
         for (int epochIndex = 0; epochIndex < maxEpochs; ++epochIndex) {
             System.out.println("Epoch " + (epochIndex + 1));
-            
-            Collections.shuffle(dataCopy);
-            for (Point point : dataCopy) {
+
+            double neighbourhoodFactor = neighbourhoodFactorProvider.getNeighbourhoodFactor(epochIndex);
+            double learningFactor = learningFactorProvider.getLearningFactor(epochIndex);
+
+            Collections.shuffle(data);
+            for (Point point : data) {
                 distanceCalculator.calculateDistances(point, collection, metric);
                 Collections.sort(collection.getNeurons());
 
                 for (int ranking = 0; ranking < collection.getNeurons().size(); ++ranking) {
                     Neuron neuron = collection.getNeurons().get(ranking);
-
-                    double neighbourhoodFactor = neighbourhoodFactorProvider.getNeighbourhoodFactor(epochIndex);
                     double neighbourhood = neighbourhoodCalculator.calculateNeighbourhood(ranking, neighbourhoodFactor);
-
-                    double learningFactor = learningFactorProvider.getLearningFactor(epochIndex);
 
                     for (int i = 0; i < neuron.getWeights().length; ++i) {
                         double newWeight = neuron.getWeight(i);
