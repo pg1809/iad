@@ -12,7 +12,7 @@ public class PowerLearningFactor implements LearningFactorProvider {
     
     public final static double DEFAULT_MINIMUM_FACTOR = 0.005;
     
-    private final int maxEpochIndex;
+    private final double maxEpochIndex;
 
     private final double initialFactor;
 
