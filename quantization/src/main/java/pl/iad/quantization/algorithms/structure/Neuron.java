@@ -12,6 +12,8 @@ public class Neuron extends Point implements Comparable<Neuron> {
     private final static Random generator = new Random();
 
     private double distanceToPoint;
+    
+    private int wins;
 
     public Neuron(int dimension, double maxWeightValue) {
         weights = new double[dimension];
@@ -28,6 +30,10 @@ public class Neuron extends Point implements Comparable<Neuron> {
         }
     }
 
+    public void addWin() {
+        ++wins;
+    }
+    
     @Override
     public int compareTo(Neuron other) {
         return (distanceToPoint - other.getDistanceToPoint() > 0 ? 1 : -1);
@@ -40,6 +46,8 @@ public class Neuron extends Point implements Comparable<Neuron> {
     public void setDistanceToPoint(double distanceToPoint) {
         this.distanceToPoint = distanceToPoint;
     }
-    
-    
+
+    public int getWins() {
+        return wins;
+    }
 }

@@ -20,6 +20,7 @@ import pl.iad.quantization.algorithms.gas.training.OnlineTrainer;
 import pl.iad.quantization.algorithms.kohonen.adaptation.GaussianNeighbourhoodFunction;
 import pl.iad.quantization.algorithms.kohonen.structure.NeuronMap;
 import pl.iad.quantization.algorithms.kohonen.training.SOMTrainer;
+import pl.iad.quantization.algorithms.parameters.learning.IndividualLearningFactor;
 import pl.iad.quantization.data.Point;
 import pl.iad.quantization.data.generator.CircleGenerator;
 import pl.iad.quantization.data.generator.RandomPointsGenerator;
@@ -44,11 +45,13 @@ public class TestApp {
         int maxAbsCoordinates = 100;
 
         GifMaker gifMaker = new GifMaker();
-
-        LearningFactorProvider learningFactorProvider
-                = new PowerLearningFactor(maxNumberOfEpochs - 1,
-                        PowerLearningFactor.DEFAULT_INITIAL_FACTOR,
-                        PowerLearningFactor.DEFAULT_MINIMUM_FACTOR);
+//
+//        LearningFactorProvider learningFactorProvider
+//                = new PowerLearningFactor(maxNumberOfEpochs - 1,
+//                        PowerLearningFactor.DEFAULT_INITIAL_FACTOR,
+//                        PowerLearningFactor.DEFAULT_MINIMUM_FACTOR);
+        
+        LearningFactorProvider learningFactorProvider = new IndividualLearningFactor();
 
         NeighbourhoodFactorProvider neighbourhoodFactorProvider
                 = new PowerNeighbourhoodFactor(maxNumberOfEpochs - 1,
@@ -60,25 +63,25 @@ public class TestApp {
 
         Metric metric = new EuclideanMetric();
 
-        NeuronCollection collection = new NeuronCollection(numberOfNeurons, 2, maxAbsCoordinates);
-        GasTrainer gasTrainer = new OnlineTrainer(gifMaker);
-        List<Double> quantizationError = gasTrainer.trainNeurons(collection,
-                input, maxNumberOfEpochs, learningFactorProvider,
-                neighbourhoodFactorProvider, metric);
+//        NeuronCollection collection = new NeuronCollection(numberOfNeurons, 2, maxAbsCoordinates);
+//        GasTrainer gasTrainer = new OnlineTrainer(gifMaker);
+//        List<Double> quantizationError = gasTrainer.trainNeurons(collection,
+//                input, maxNumberOfEpochs, learningFactorProvider,
+//                neighbourhoodFactorProvider, metric);
+//
+//        for (Double error : quantizationError) {
+//            System.out.println(error);
+//        }
 
-        for (Double error : quantizationError) {
-            System.out.println(error);
-        }
-
-//        NeuronMap som = new NeuronMap(numberOfNeurons / 8, numberOfNeurons / 5, 2, maxAbsCoordinates);
-//        SOMTrainer somTrainer = new SOMTrainer();
-//        somTrainer.setFunction(new GaussianNeighbourhoodFunction());
-//        somTrainer.setMetric(metric);
-//        somTrainer.setLearningFactorProvider(learningFactorProvider);
-//        somTrainer.setNeighbourhoodFactorProvider(neighbourhoodFactorProvider);
-//        somTrainer.setObserver(gifMaker);
-//        List<Double> errors = somTrainer.doTraining(som, input, maxNumberOfEpochs);
-//        errors.stream().forEach(System.out::println);
+        NeuronMap som = new NeuronMap(numberOfNeurons / 8, numberOfNeurons / 5, 2, maxAbsCoordinates);
+        SOMTrainer somTrainer = new SOMTrainer();
+        somTrainer.setFunction(new GaussianNeighbourhoodFunction());
+        somTrainer.setMetric(metric);
+        somTrainer.setLearningFactorProvider(learningFactorProvider);
+        somTrainer.setNeighbourhoodFactorProvider(neighbourhoodFactorProvider);
+        somTrainer.setObserver(gifMaker);
+        List<Double> errors = somTrainer.doTraining(som, input, maxNumberOfEpochs);
+        errors.stream().forEach(System.out::println);
         
         try {
             gifMaker.saveGif(new File("test.gif"));

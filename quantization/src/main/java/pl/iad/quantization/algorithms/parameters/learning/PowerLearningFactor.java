@@ -1,7 +1,5 @@
 package pl.iad.quantization.algorithms.parameters.learning;
 
-import pl.iad.quantization.algorithms.parameters.learning.LearningFactorProvider;
-
 /**
  *
  * @author Wojciech Szałapski
@@ -26,7 +24,7 @@ public class PowerLearningFactor implements LearningFactorProvider {
     }
 
     @Override
-    public double getLearningFactor(int epochIndex) {
+    public double getLearningFactor(int epochIndex, int neuronWins) {
         return initialFactor * Math.pow(base, epochIndex / maxEpochIndex);
     }
 }

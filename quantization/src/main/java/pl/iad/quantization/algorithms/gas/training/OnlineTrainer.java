@@ -41,16 +41,17 @@ public class OnlineTrainer implements GasTrainer {
             System.out.println("Epoch " + (epochIndex + 1));
 
             double neighbourhoodFactor = neighbourhoodFactorProvider.getNeighbourhoodFactor(epochIndex);
-            double learningFactor = learningFactorProvider.getLearningFactor(epochIndex);
 
             Collections.shuffle(data);
             for (Point point : data) {
                 distanceCalculator.calculateDistances(point, collection, metric);
                 Collections.sort(collection.getNeurons());
-
+                collection.getNeurons().get(0).addWin();
+                
                 for (int ranking = 0; ranking < collection.getNeurons().size(); ++ranking) {
                     Neuron neuron = collection.getNeurons().get(ranking);
                     double neighbourhood = neighbourhoodCalculator.calculateNeighbourhood(ranking, neighbourhoodFactor);
+                    double learningFactor = learningFactorProvider.getLearningFactor(epochIndex, neuron.getWins());
 
                     for (int i = 0; i < neuron.getWeights().length; ++i) {
                         double newWeight = neuron.getWeight(i);
