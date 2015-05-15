@@ -1,8 +1,10 @@
 package pl.iad.quantization.algorithms.gas.structure;
 
+import pl.iad.quantization.algorithms.structure.Neuron;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import pl.iad.quantization.algorithms.structure.Neuron;
 
 /**
  *

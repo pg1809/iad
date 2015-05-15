@@ -1,8 +1,8 @@
 package pl.iad.quantization.algorithms.gas.training;
 
 import java.util.List;
-import pl.iad.quantization.algorithms.gas.parameters.learning.LearningFactorProvider;
-import pl.iad.quantization.algorithms.gas.parameters.neighbourhood.NeighbourhoodFactorProvider;
+import pl.iad.quantization.algorithms.parameters.learning.LearningFactorProvider;
+import pl.iad.quantization.algorithms.parameters.neighbourhood.NeighbourhoodFactorProvider;
 import pl.iad.quantization.algorithms.gas.structure.NeuronCollection;
 import pl.iad.quantization.data.Point;
 import pl.iad.quantization.data.metrics.Metric;
