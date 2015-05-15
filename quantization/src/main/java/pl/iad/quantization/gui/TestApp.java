@@ -23,7 +23,8 @@ import pl.iad.quantization.data.generator.CircleGenerator;
 import pl.iad.quantization.data.generator.RandomPointsGenerator;
 import pl.iad.quantization.data.metrics.EuclideanMetric;
 import pl.iad.quantization.data.metrics.Metric;
-import pl.iad.quantization.reporting.GifMaker;
+import pl.iad.quantization.graphics.GifMaker;
+import pl.iad.quantization.graphics.PlotGenerator;
 
 /**
  *
@@ -36,7 +37,7 @@ public class TestApp {
      */
     public static void main(String[] args) {
         int maxNumberOfEpochs = 500;
-        int numberOfNeurons = 40;
+        int numberOfNeurons = 100;
 
         int numberOfPoints = 5000;
         int maxAbsCoordinates = 100;
@@ -66,10 +67,9 @@ public class TestApp {
 //        for (Double error : quantizationError) {
 //            System.out.println(error);
 //        }
-        
-        NeuronMap som = new NeuronMap(numberOfNeurons / 8, numberOfNeurons / 5, 2, maxAbsCoordinates);
+        NeuronMap som = new NeuronMap(numberOfNeurons / 20, numberOfNeurons / 5, 2, maxAbsCoordinates);
         SOMTrainer somTrainer = new SOMTrainer();
-        GifMaker gifMaker = new GifMaker();
+        GifMaker gifMaker = new GifMaker(input, 10);
         somTrainer.setFunction(new GaussianNeighbourhoodFunction());
         somTrainer.setMetric(metric);
         somTrainer.setLearningFactorProvider(learningFactorProvider);
@@ -77,7 +77,10 @@ public class TestApp {
         somTrainer.setObserver(gifMaker);
         List<Double> errors = somTrainer.doTraining(som, input, maxNumberOfEpochs);
         errors.stream().forEach(System.out::println);
+
+        PlotGenerator generator = new PlotGenerator();
         try {
+            generator.generateErrorChart(errors, "errors.png");
             gifMaker.saveGif(new File("test.gif"));
         } catch (IOException ex) {
             Logger.getLogger(TestApp.class.getName()).log(Level.SEVERE, null, ex);

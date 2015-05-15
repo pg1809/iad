@@ -41,7 +41,7 @@ public class SOMTrainer {
             double error = doEpoch(map, data, learningRate, radius);
             errors.add(error);
             
-            observer.notifyAfterEpoch(map.getNeurons(), data, error);
+            observer.notifyAfterEpoch(map.getNeurons(), error);
         }
 
         return errors;

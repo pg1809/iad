@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pl.iad.quantization.reporting;
+package pl.iad.quantization.graphics;
 
 import com.gif4j.light.GifEncoder;
 import com.gif4j.light.GifFrame;
@@ -24,6 +24,7 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import pl.iad.quantization.algorithms.structure.Neuron;
 import pl.iad.quantization.data.Point;
+import pl.iad.quantization.reporting.TrainingObserver;
 
 /**
  *
@@ -32,71 +33,77 @@ import pl.iad.quantization.data.Point;
 public class GifMaker implements TrainingObserver {
 
     private static final int WIDTH = 1024;
-
+    
     private static final int HEIGHT = 768;
 
-    private static final int DELAY = 10;
+    private static final int DATA_SERIES_IDX = 1;
+    
+    private static final int NEURONS_SERIES_IDX = 0;
     
     private GifImage gifImage;
-    
-    private List<List<? extends Neuron>> neuronsSetsList;
 
-    public GifMaker() {
+    private XYSeries points;
+
+    private XYLineAndShapeRenderer renderer;
+
+    public GifMaker(List<Point> data, int delay) {
         gifImage = new GifImage();
-        gifImage.setDefaultDelay(DELAY);
-    }
+        gifImage.setDefaultDelay(delay);
+        points = new XYSeries("points");
+        for (Point point : data) {
+            points.add(point.getWeight(0), point.getWeight(1));
+        }
 
+        renderer = new XYLineAndShapeRenderer();
+        renderer.setSeriesLinesVisible(DATA_SERIES_IDX, false);
+        renderer.setSeriesLinesVisible(NEURONS_SERIES_IDX, false);
+        renderer.setSeriesPaint(NEURONS_SERIES_IDX, Color.RED);
+        renderer.setSeriesPaint(DATA_SERIES_IDX, Color.BLUE);
+        renderer.setSeriesShape(NEURONS_SERIES_IDX, new Ellipse2D.Double(0, 0, 0.7, 0.7));
+        renderer.setSeriesShape(DATA_SERIES_IDX, new Ellipse2D.Double(0, 0, 5, 5));
+    }
+    
     @Override
-    public void notifyAfterEpoch(List<? extends Neuron> neurons, List<Point> dataCoords, double error) {
+    public void notifyAfterEpoch(List<? extends Neuron> neurons, double error) {
         try {
-            GifFrame frame = createGifFrame(neurons, dataCoords, error);
+            GifFrame frame = createGifFrame(neurons, error);
             gifImage.addGifFrame(frame);
         } catch (InterruptedException ex) {
             Logger.getLogger(GifMaker.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    private GifFrame createGifFrame(List<? extends Neuron> neurons, List<Point> dataCoords, double error) throws InterruptedException {
-        BufferedImage image = createImage(neurons, dataCoords, error);
+    private GifFrame createGifFrame(List<? extends Neuron> neurons, double error) throws InterruptedException {
+        BufferedImage image = createImage(neurons, error);
         GifFrame frame = new GifFrame(image);
         return frame;
     }
 
-    private BufferedImage createImage(List<? extends Neuron> neurons, List<Point> dataCoords, double error) {
+    private BufferedImage createImage(List<? extends Neuron> neurons, double error) {
         XYSeriesCollection dataset = new XYSeriesCollection();
-        
+
         XYSeries neuronsSeries = new XYSeries("Neurons");
         for (Neuron neuron : neurons) {
             neuronsSeries.add(neuron.getWeight(0), neuron.getWeight(1));
         }
         dataset.addSeries(neuronsSeries);
-        XYSeries points = new XYSeries("Points");
-        for (Point point : dataCoords) {
-            points.add(point.getWeight(0), point.getWeight(1));
-        }
         dataset.addSeries(points);
-        
+
         JFreeChart chart = ChartFactory.createXYLineChart(
                 "Quantization error: " + error,
                 null, null,
                 dataset,
                 PlotOrientation.VERTICAL,
                 true, false, false);
-        
-        XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
-        renderer.setSeriesLinesVisible(0, false);
-        renderer.setSeriesLinesVisible(1, false);
-        renderer.setSeriesFillPaint(1, Color.RED);
-        renderer.setSeriesFillPaint(0, Color.BLACK);
-        renderer.setSeriesShape(1, new Ellipse2D.Double(0, 0, 0.5, 0.5));
-        renderer.setSeriesShape(0, new Ellipse2D.Double(0, 0, 5, 5));
+
+        //chart.getXYPlot().setBackgroundPaint(Color.WHITE);
         chart.getXYPlot().setRenderer(renderer);
-        
+
         return chart.createBufferedImage(WIDTH, HEIGHT);
     }
 
     public void saveGif(File file) throws IOException {
         GifEncoder.encode(gifImage, file);
     }
-    
+
 }

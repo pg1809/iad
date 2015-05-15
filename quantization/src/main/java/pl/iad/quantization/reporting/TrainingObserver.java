@@ -15,5 +15,5 @@ import pl.iad.quantization.data.Point;
  */
 public interface TrainingObserver {
     
-    void notifyAfterEpoch(List<? extends Neuron> neurons, List<Point> dataCoords, double error);
+    void notifyAfterEpoch(List<? extends Neuron> neurons, double error);
 }
