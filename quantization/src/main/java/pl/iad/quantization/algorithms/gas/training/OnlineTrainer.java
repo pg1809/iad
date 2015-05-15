@@ -47,7 +47,7 @@ public class OnlineTrainer implements GasTrainer {
                 distanceCalculator.calculateDistances(point, collection, metric);
                 Collections.sort(collection.getNeurons());
                 collection.getNeurons().get(0).addWin();
-                
+
                 for (int ranking = 0; ranking < collection.getNeurons().size(); ++ranking) {
                     Neuron neuron = collection.getNeurons().get(ranking);
                     double neighbourhood = neighbourhoodCalculator.calculateNeighbourhood(ranking, neighbourhoodFactor);
@@ -82,7 +82,9 @@ public class OnlineTrainer implements GasTrainer {
             double epochError = distanceSum / data.size();
             quantizationError.add(epochError);
 
-            trainingObserver.notifyAfterEpoch(collection.getNeurons(), data, epochError);
+            if (trainingObserver != null) {
+                trainingObserver.notifyAfterEpoch(collection.getNeurons(), data, epochError);
+            }
         }
 
         return quantizationError;
