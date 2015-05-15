@@ -11,6 +11,7 @@ import pl.iad.quantization.algorithms.gas.structure.NeuronCollection;
 import pl.iad.quantization.data.Point;
 import pl.iad.quantization.data.metrics.DistanceCalculator;
 import pl.iad.quantization.data.metrics.Metric;
+import pl.iad.quantization.reporting.TrainingObserver;
 
 /**
  *
@@ -21,6 +22,12 @@ public class OnlineTrainer implements GasTrainer {
     private final static DistanceCalculator distanceCalculator = new DistanceCalculator();
 
     private final static NeighbourhoodCalculator neighbourhoodCalculator = new NeighbourhoodCalculator();
+
+    private final TrainingObserver trainingObserver;
+
+    public OnlineTrainer(TrainingObserver trainingObserver) {
+        this.trainingObserver = trainingObserver;
+    }
 
     @Override
     public List<Double> trainNeurons(NeuronCollection collection, List<Point> data,
@@ -71,7 +78,10 @@ public class OnlineTrainer implements GasTrainer {
                 distanceSum += minDistance;
             }
 
-            quantizationError.add(distanceSum / data.size());
+            double epochError = distanceSum / data.size();
+            quantizationError.add(epochError);
+
+            trainingObserver.notifyAfterEpoch(collection.getNeurons(), data, epochError);
         }
 
         return quantizationError;
