@@ -5,7 +5,7 @@
  */
 package pl.iad.quantization.algorithms.kohonen.adaptation;
 
-import pl.iad.quantization.algorithms.structure.KohonenNeuron;
+import pl.iad.quantization.algorithms.kohonen.structure.KohonenNeuron;
 
 
 public class SimpleNeighbourhoodFunction implements NeighbourhoodFunction {

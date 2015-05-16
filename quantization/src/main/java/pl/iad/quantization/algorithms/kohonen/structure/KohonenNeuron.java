@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pl.iad.quantization.algorithms.structure;
+package pl.iad.quantization.algorithms.kohonen.structure;
+
+import pl.iad.quantization.algorithms.structure.Neuron;
 
 /**
  *
@@ -11,9 +13,9 @@ package pl.iad.quantization.algorithms.structure;
  */
 public class KohonenNeuron extends Neuron {
 
-    private int x;
+    private final int x;
 
-    private int y;
+    private final int y;
 
     public KohonenNeuron(int dimension, double maxWeightValue, int x, int y) {
         super(dimension, maxWeightValue);
@@ -27,6 +29,6 @@ public class KohonenNeuron extends Neuron {
 
     public boolean isInNeighbourHood(double radius, KohonenNeuron neuron) {
         double squaredDistanceFrom = (double) getSquaredDistanceFromNeuron(neuron);
-        return radius >= squaredDistanceFrom;
+        return radius * radius >= squaredDistanceFrom;
     }
 }

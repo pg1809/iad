@@ -7,13 +7,16 @@ package pl.iad.quantization.reporting;
 
 import java.util.List;
 import pl.iad.quantization.algorithms.structure.Neuron;
-import pl.iad.quantization.data.Point;
 
 /**
  *
  * @author PiotrGrzelak
  */
-public interface TrainingObserver {
+public interface TrainingReporter {
     
     void notifyAfterEpoch(List<? extends Neuron> neurons, double error);
+    
+    void clearRunData();
+    
+    void preserveRunData();
 }

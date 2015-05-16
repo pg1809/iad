@@ -5,15 +5,15 @@
  */
 package pl.iad.quantization.algorithms.kohonen.training;
 
-import pl.iad.quantization.reporting.TrainingObserver;
-import java.util.ArrayList;
 import pl.iad.quantization.algorithms.kohonen.structure.NeuronMap;
+import pl.iad.quantization.algorithms.kohonen.structure.KohonenNeuron;
+import pl.iad.quantization.reporting.TrainingReporter;
+import java.util.ArrayList;
 import pl.iad.quantization.algorithms.kohonen.adaptation.NeighbourhoodFunction;
 import java.util.Collections;
 import java.util.List;
 import pl.iad.quantization.algorithms.parameters.learning.LearningFactorProvider;
 import pl.iad.quantization.algorithms.parameters.neighbourhood.NeighbourhoodFactorProvider;
-import pl.iad.quantization.algorithms.structure.KohonenNeuron;
 import pl.iad.quantization.data.Point;
 import pl.iad.quantization.data.metrics.Metric;
 
@@ -31,7 +31,7 @@ public class SOMTrainer {
 
     private NeighbourhoodFunction function;
 
-    private TrainingObserver observer;
+    private TrainingReporter observer;
 
     public List<Double> doTraining(NeuronMap map, List<Point> data, int maxIterations) {
         List<Double> errors = new ArrayList<>(maxIterations);
@@ -39,8 +39,10 @@ public class SOMTrainer {
             double radius = neighbourhoodFactorProvider.getNeighbourhoodFactor(i);
             double error = doEpoch(i, map, data, radius);
             errors.add(error);
-            
-            observer.notifyAfterEpoch(map.getNeurons(), error);
+
+            if (observer != null) {
+                observer.notifyAfterEpoch(map.getNeurons(), error);
+            }
         }
 
         return errors;
@@ -87,7 +89,7 @@ public class SOMTrainer {
 
             distanceSum += minDistance;
         }
-        
+
         return distanceSum / data.size();
     }
 
@@ -117,7 +119,7 @@ public class SOMTrainer {
         this.function = function;
     }
 
-    public void setObserver(TrainingObserver observer) {
+    public void setObserver(TrainingReporter observer) {
         this.observer = observer;
     }
 }

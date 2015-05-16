@@ -8,10 +8,12 @@ import pl.iad.quantization.algorithms.parameters.learning.LearningFactorProvider
 import pl.iad.quantization.algorithms.parameters.neighbourhood.NeighbourhoodFactorProvider;
 import pl.iad.quantization.algorithms.structure.Neuron;
 import pl.iad.quantization.algorithms.gas.structure.NeuronCollection;
+import pl.iad.quantization.algorithms.gas.training.GasTrainer;
+import pl.iad.quantization.algorithms.structure.Neuron;
 import pl.iad.quantization.data.Point;
 import pl.iad.quantization.data.metrics.DistanceCalculator;
 import pl.iad.quantization.data.metrics.Metric;
-import pl.iad.quantization.reporting.TrainingObserver;
+import pl.iad.quantization.reporting.TrainingReporter;
 
 /**
  *
@@ -23,10 +25,10 @@ public class OnlineTrainer implements GasTrainer {
 
     private final static NeighbourhoodCalculator neighbourhoodCalculator = new NeighbourhoodCalculator();
 
-    private final TrainingObserver trainingObserver;
+    private final TrainingReporter reporter;
 
-    public OnlineTrainer(TrainingObserver trainingObserver) {
-        this.trainingObserver = trainingObserver;
+    public OnlineTrainer(TrainingReporter trainingObserver) {
+        this.reporter = trainingObserver;
     }
 
     @Override
@@ -47,7 +49,7 @@ public class OnlineTrainer implements GasTrainer {
                 distanceCalculator.calculateDistances(point, collection, metric);
                 Collections.sort(collection.getNeurons());
                 collection.getNeurons().get(0).addWin();
-                
+
                 for (int ranking = 0; ranking < collection.getNeurons().size(); ++ranking) {
                     Neuron neuron = collection.getNeurons().get(ranking);
                     double neighbourhood = neighbourhoodCalculator.calculateNeighbourhood(ranking, neighbourhoodFactor);
@@ -82,9 +84,12 @@ public class OnlineTrainer implements GasTrainer {
             double epochError = distanceSum / data.size();
             quantizationError.add(epochError);
 
-            trainingObserver.notifyAfterEpoch(collection.getNeurons(), epochError);
+            if (reporter != null) {
+                reporter.notifyAfterEpoch(collection.getNeurons(), epochError);
+            }
         }
-
+        reporter.preserveRunData();
+        reporter
         return quantizationError;
     }
 }

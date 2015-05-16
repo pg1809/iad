@@ -5,10 +5,10 @@
  */
 package pl.iad.quantization.algorithms.kohonen.structure;
 
+import pl.iad.quantization.algorithms.kohonen.structure.KohonenNeuron;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import pl.iad.quantization.algorithms.structure.KohonenNeuron;
 
 /**
  *

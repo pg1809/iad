@@ -5,7 +5,7 @@
  */
 package pl.iad.quantization.algorithms.kohonen.adaptation;
 
-import pl.iad.quantization.algorithms.structure.KohonenNeuron;
+import pl.iad.quantization.algorithms.kohonen.structure.KohonenNeuron;
 
 
 public class GaussianNeighbourhoodFunction implements NeighbourhoodFunction {
@@ -13,7 +13,7 @@ public class GaussianNeighbourhoodFunction implements NeighbourhoodFunction {
     @Override
     public double value(KohonenNeuron n1, KohonenNeuron n2, double radius) {
         double dist = n1.getSquaredDistanceFromNeuron(n2);
-        return Math.exp(dist / (2 * radius * radius));
+        return Math.exp(-dist / (2 * radius * radius));
     }
     
 }
