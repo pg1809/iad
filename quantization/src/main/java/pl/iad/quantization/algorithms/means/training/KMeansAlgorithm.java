@@ -71,12 +71,12 @@ public class KMeansAlgorithm {
                 }
             }
 
-            p.setRepresentative(closestIdx);
+            p.setRepresentative(centres.get(closestIdx));
         }
 
         double error = 0;
         for (Point p : data) {
-            Centre centre = centres.get(p.getRepresentative());
+            Centre centre = (Centre) p.getRepresentative();
             error += metric.distance(p, centre);
         }
         error /= data.size();
@@ -85,25 +85,31 @@ public class KMeansAlgorithm {
 //            if (centres.get(i).isStable()) {
 //                continue;
 //            }
-            List<Point> representedPoints = getRepresentedPoints(i, data);
+            List<Point> representedPoints = getRepresentedPoints(centres.get(i), data);
             if (representedPoints.isEmpty()) {
                 continue;
             }
             Centre centre = centres.get(i);
+            double[] newCoords = new double[centre.getWeights().length];
             for (int j = 0; j < centre.getWeights().length; ++j) {
                 double newCoord = 0;
                 for (Point p : representedPoints) {
                     newCoord += p.getWeight(j);
                 }
-                centre.setWeight(j, newCoord / representedPoints.size());
+                newCoords[j] = newCoord / representedPoints.size();
             }
+            Point point = new Point();
+            point.setWeights(newCoords);
+            double shift = metric.distance(point, centre);
+            centre.setShift(shift);
+            centre.setWeights(newCoords);
         }
 
         return error;
     }
 
-    private List<Point> getRepresentedPoints(int centreIdx, List<Point> data) {
-        return data.stream().filter(p -> p.getRepresentative() == centreIdx).collect(Collectors.toList());
+    private List<Point> getRepresentedPoints(Centre centre, List<Point> data) {
+        return data.stream().filter(p -> p.getRepresentative().equals(centre)).collect(Collectors.toList());
     }
 
     public boolean allCentersStable(List<Centre> centres) {

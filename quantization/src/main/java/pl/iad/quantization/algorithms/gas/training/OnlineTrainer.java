@@ -8,7 +8,6 @@ import pl.iad.quantization.algorithms.parameters.learning.LearningFactorProvider
 import pl.iad.quantization.algorithms.parameters.neighbourhood.NeighbourhoodFactorProvider;
 import pl.iad.quantization.algorithms.structure.Neuron;
 import pl.iad.quantization.algorithms.gas.structure.NeuronCollection;
-import pl.iad.quantization.algorithms.gas.training.GasTrainer;
 import pl.iad.quantization.algorithms.structure.Neuron;
 import pl.iad.quantization.data.Point;
 import pl.iad.quantization.data.metrics.DistanceCalculator;
@@ -73,7 +72,7 @@ public class OnlineTrainer implements GasTrainer {
                     Neuron neuron = collection.getNeurons().get(neuronNumber);
                     double distance = metric.distance(neuron, data.get(i));
                     if (distance < minDistance) {
-                        data.get(i).setRepresentative(neuronNumber);
+                        data.get(i).setRepresentative(neuron);
                         minDistance = distance;
                     }
                 }
@@ -89,7 +88,6 @@ public class OnlineTrainer implements GasTrainer {
             }
         }
         reporter.preserveRunData();
-        reporter
         return quantizationError;
     }
 }

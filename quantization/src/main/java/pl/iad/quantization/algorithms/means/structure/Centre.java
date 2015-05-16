@@ -10,7 +10,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.OptionalDouble;
 import pl.iad.quantization.algorithms.structure.Neuron;
-import pl.iad.quantization.data.Point;
 
 /**
  *
@@ -18,31 +17,20 @@ import pl.iad.quantization.data.Point;
  */
 public class Centre extends Neuron {
     
-    private boolean[] stableCoords;
+    private double shift = Double.MAX_VALUE;
     
     private double epsilon;
     
     public Centre(int dimension, double maxWeightValue, double epsilon) {
         super(dimension, maxWeightValue);
-        stableCoords = new boolean[dimension];
-        for (int i = 0; i < stableCoords.length; ++i) {
-            stableCoords[i] = false;
-        }
         this.epsilon = epsilon;
-    }
-
-    @Override
-    public void setWeight(int index, double weight) {
-        stableCoords[index] = weight - weights[index] < epsilon;
-        super.setWeight(index, weight);
     }
     
     public boolean isStable() {
-        for (int i = 0; i < weights.length; ++i) {
-            if (!stableCoords[i]) {
-                return false;
-            }
-        }
-        return true;
+        return shift < epsilon;
+    }
+    
+    public void setShift(double shift) {
+        this.shift = shift;
     }
 }

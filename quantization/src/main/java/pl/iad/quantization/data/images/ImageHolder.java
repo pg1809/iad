@@ -16,7 +16,7 @@ public class ImageHolder {
 
     private final int frameSize;
 
-    private final List<Point> pointRepresentation;
+    private List<Point> pointRepresentation;
 
     private final int widthInFrames;
 
@@ -55,7 +55,7 @@ public class ImageHolder {
             }
             for (int i = 0; i < widthRemainder; ++i) {
                 image.setRGB(convertedWidth + i, row,
-                        convertPixelToRGB(originalPixels[row][convertedHeight + i]));
+                        convertPixelToRGB(originalPixels[row][convertedWidth + i]));
             }
         }
         for (int i = 0; i < heightRemainder; ++i) {
@@ -74,5 +74,9 @@ public class ImageHolder {
 
     public List<Point> getPointRepresentation() {
         return pointRepresentation;
+    }
+
+    public void setPointRepresentation(List<Point> pointRepresentation) {
+        this.pointRepresentation = pointRepresentation;
     }
 }
