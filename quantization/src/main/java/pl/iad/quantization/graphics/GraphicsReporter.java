@@ -86,7 +86,7 @@ public class GraphicsReporter implements TrainingReporter {
         currentRunErrors.add(error);
     }
 
-    public void genrateGif(File file, int delay) throws IOException {
+    public void generateGIF(File file, int delay) throws IOException {
         GifImage img = new GifImage();
         img.setDefaultDelay(delay);
         try {

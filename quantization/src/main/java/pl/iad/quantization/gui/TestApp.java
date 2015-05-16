@@ -8,7 +8,6 @@ package pl.iad.quantization.gui;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import pl.iad.quantization.algorithms.kohonen.structure.NeuronMap;
 import pl.iad.quantization.algorithms.kohonen.training.SOMTrainer;
@@ -16,9 +15,6 @@ import pl.iad.quantization.algorithms.means.training.KMeansAlgorithm;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import pl.iad.quantization.algorithms.gas.structure.NeuronCollection;
-import pl.iad.quantization.algorithms.gas.training.GasTrainer;
-import pl.iad.quantization.algorithms.gas.training.OnlineTrainer;
 import pl.iad.quantization.algorithms.parameters.learning.LearningFactorProvider;
 import pl.iad.quantization.algorithms.parameters.neighbourhood.NeighbourhoodFactorProvider;
 import pl.iad.quantization.algorithms.parameters.neighbourhood.PowerNeighbourhoodFactor;
@@ -121,13 +117,13 @@ public class TestApp {
 //        somTrainer.setReporter(gifMaker);
 //        List<Double> errors = somTrainer.doTraining(som, input, maxNumberOfEpochs);
 //        errors.stream().forEach(System.out::println);
-
         KMeansAlgorithm alg = new KMeansAlgorithm();
         alg.setMetric(metric);
         alg.setReporter(gifMaker);
-        alg.doQuantization(input, maxAbsCoordinates, maxNumberOfEpochs, 5, numberOfNeurons, 1e-4, 2);
-        
-        gifMaker.genrateGif(new File("test.gif"), 10);
+        alg.doQuantization(input, maxAbsCoordinates, maxNumberOfEpochs, 5,
+                numberOfNeurons, 1e-4, 2);
+
+        gifMaker.generateGIF(new File("test.gif"), 10);
 
         // IMAGE COMPRESSION
         File image = new File("C:\\Users\\Ardavel\\Desktop\\test2.png");
@@ -137,7 +133,7 @@ public class TestApp {
             ImageData imageData = imageReader.readBlackAndWhiteImage(image);
             int frameSize = 4;
             ImageHolder imageHolder = new ImageHolder(imageData, frameSize);
-            
+
             BufferedImage recreatedImage = imageHolder.recreateImage();
             ImageIO.write(recreatedImage, "png", convertedImage);
 //            NeuronCollection collection = new NeuronCollection(50, frameSize * frameSize, 1);
@@ -161,5 +157,4 @@ public class TestApp {
 //        for (Double error : quantizationError) {
 //            System.out.println(error);
 //        }
-    }
 }
