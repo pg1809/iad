@@ -33,7 +33,7 @@ import pl.iad.quantization.reporting.TrainingReporter;
  *
  * @author PiotrGrzelak
  */
-public class GraphicsReporter implements TrainingReporter {
+public class GraphicReporter implements TrainingReporter {
 
     private static final int WIDTH = 1024;
 
@@ -55,7 +55,7 @@ public class GraphicsReporter implements TrainingReporter {
 
     private XYLineAndShapeRenderer renderer;
 
-    public GraphicsReporter(List<Point> data) {
+    public GraphicReporter(List<Point> data) {
         points = new XYSeries("points");
         currentRunErrors = new ArrayList<>();
         currentRunNeuronSeries = new ArrayList<>();
@@ -97,7 +97,7 @@ public class GraphicsReporter implements TrainingReporter {
                 img.addGifFrame(frame);
             }
         } catch (InterruptedException ex) {
-            Logger.getLogger(GraphicsReporter.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GraphicReporter.class.getName()).log(Level.SEVERE, null, ex);
         }
         GifEncoder.encode(img, file);
     }

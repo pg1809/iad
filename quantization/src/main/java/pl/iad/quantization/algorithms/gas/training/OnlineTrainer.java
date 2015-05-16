@@ -87,7 +87,9 @@ public class OnlineTrainer implements GasTrainer {
                 reporter.notifyAfterEpoch(collection.getNeurons(), epochError);
             }
         }
-        reporter.preserveRunData();
+        if (reporter != null) {
+            reporter.preserveRunData();
+        }
         return quantizationError;
     }
 }

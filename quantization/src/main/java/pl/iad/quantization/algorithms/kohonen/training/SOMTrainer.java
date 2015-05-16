@@ -33,19 +33,17 @@ public class SOMTrainer {
 
     private TrainingReporter observer;
 
-    public List<Double> doTraining(NeuronMap map, List<Point> data, int maxIterations) {
-        List<Double> errors = new ArrayList<>(maxIterations);
+    public void doTraining(NeuronMap map, List<Point> data, int maxIterations) {
         for (int i = 0; i <= maxIterations; ++i) {
             double radius = neighbourhoodFactorProvider.getNeighbourhoodFactor(i);
             double error = doEpoch(i, map, data, radius);
-            errors.add(error);
 
             if (observer != null) {
                 observer.notifyAfterEpoch(map.getNeurons(), error);
             }
         }
 
-        return errors;
+        observer.preserveRunData();
     }
 
     private double doEpoch(int epochIndex, NeuronMap map, List<Point> data, double radius) {

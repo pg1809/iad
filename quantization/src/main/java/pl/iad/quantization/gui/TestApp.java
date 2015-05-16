@@ -28,7 +28,7 @@ import pl.iad.quantization.data.images.reader.DefaultImageReader;
 import pl.iad.quantization.data.images.reader.ImageReader;
 import pl.iad.quantization.data.metrics.EuclideanMetric;
 import pl.iad.quantization.data.metrics.Metric;
-import pl.iad.quantization.graphics.GraphicsReporter;
+import pl.iad.quantization.graphics.GraphicReporter;
 
 /**
  *
@@ -73,7 +73,7 @@ public class TestApp {
 //        }
         NeuronMap som = new NeuronMap(numberOfNeurons / 20, numberOfNeurons / 5, 2, maxAbsCoordinates);
         SOMTrainer somTrainer = new SOMTrainer();
-        GraphicsReporter gifMaker = new GraphicsReporter(input);
+        GraphicReporter graphicReporter = new GraphicReporter(input);
 //        });
         // IMAGE COMPRESSION
 //        File image = new File("C:\\Users\\Ardavel\\Desktop\\test3.png");
@@ -119,11 +119,12 @@ public class TestApp {
 //        errors.stream().forEach(System.out::println);
         KMeansAlgorithm alg = new KMeansAlgorithm();
         alg.setMetric(metric);
-        alg.setReporter(gifMaker);
+        alg.setReporter(graphicReporter);
         alg.doQuantization(input, maxAbsCoordinates, maxNumberOfEpochs, 5,
                 numberOfNeurons, 1e-4, 2);
 
-        gifMaker.generateGIF(new File("test.gif"), 10);
+        graphicReporter.generateGIF(new File("test.gif"), 10);
+        graphicReporter.generateErrorChart("error.png");
 
         // IMAGE COMPRESSION
         File image = new File("C:\\Users\\Ardavel\\Desktop\\test2.png");
