@@ -5,14 +5,17 @@
  */
 package pl.iad.quantization.gui;
 
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import pl.iad.quantization.algorithms.gas.structure.NeuronCollection;
+import pl.iad.quantization.algorithms.gas.training.GasTrainer;
+import pl.iad.quantization.algorithms.gas.training.OnlineTrainer;
 import pl.iad.quantization.algorithms.parameters.learning.LearningFactorProvider;
 import pl.iad.quantization.algorithms.parameters.neighbourhood.NeighbourhoodFactorProvider;
 import pl.iad.quantization.algorithms.parameters.neighbourhood.PowerNeighbourhoodFactor;
@@ -38,7 +41,7 @@ public class TestApp {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        int maxNumberOfEpochs = 500;
+        int maxNumberOfEpochs = 300;
         int numberOfNeurons = 40;
 
         int numberOfPoints = 5000;
@@ -72,26 +75,34 @@ public class TestApp {
 //        quantizationError.stream().forEach((error) -> {
 //            System.out.println(error);
 //        });
-        
         // IMAGE COMPRESSION
-        File image = new File("C:\\Users\\Ardavel\\Desktop\\test2.png");
+        File image = new File("C:\\Users\\Ardavel\\Desktop\\test3.png");
         File convertedImage = new File("C:\\Users\\Ardavel\\Desktop\\converted.png");
         ImageReader imageReader = new DefaultImageReader();
         try {
             ImageData imageData = imageReader.readBlackAndWhiteImage(image);
-            int frameSize = 4;
+            int frameSize = 3;
             ImageHolder imageHolder = new ImageHolder(imageData, frameSize);
+
+            List<Point> imageCopy = new ArrayList<>(imageHolder.getPointRepresentation());
+
+            NeuronCollection collection = new NeuronCollection(256, frameSize * frameSize, 1);
+            GasTrainer gasTrainer = new OnlineTrainer(null);
+            List<Double> quantizationError = gasTrainer.trainNeurons(collection,
+                    imageCopy, maxNumberOfEpochs, learningFactorProvider,
+                    neighbourhoodFactorProvider, metric);
+            quantizationError.stream().forEach((error) -> {
+                System.out.println(error);
+            });
+
+            List<Point> newRepresentation = new ArrayList<>();
+            for (Point frame : imageHolder.getPointRepresentation()) {
+                newRepresentation.add(frame.getRepresentative());
+            }
+            imageHolder.setPointRepresentation(newRepresentation);
             
             BufferedImage recreatedImage = imageHolder.recreateImage();
             ImageIO.write(recreatedImage, "png", convertedImage);
-//            NeuronCollection collection = new NeuronCollection(50, frameSize * frameSize, 1);
-//            GasTrainer gasTrainer = new OnlineTrainer(null);
-//            List<Double> quantizationError = gasTrainer.trainNeurons(collection,
-//                    imageHolder.getPointRepresentation(), maxNumberOfEpochs,
-//                    learningFactorProvider, neighbourhoodFactorProvider, metric);
-//            quantizationError.stream().forEach((error) -> {
-//                System.out.println(error);
-//            });
         } catch (IOException ex) {
             Logger.getLogger(TestApp.class.getName()).log(Level.SEVERE, null, ex);
         }

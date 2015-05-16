@@ -1,5 +1,7 @@
 package pl.iad.quantization.data;
 
+import pl.iad.quantization.algorithms.structure.Neuron;
+
 /**
  *
  * @author Wojciech Szałapski
@@ -8,7 +10,14 @@ public class Point {
 
     protected double[] weights;
     
-    private int representative;
+    private Neuron representative;
+
+    public void print() {
+        for (int i = 0; i < weights.length; ++i) {
+            System.out.printf("%.4f ", weights[i]);
+        }
+        System.out.println("");
+    }
 
     public double getWeight(int index) {
         return weights[index];
@@ -26,11 +35,11 @@ public class Point {
         this.weights = weights;
     }
 
-    public int getRepresentative() {
+    public Neuron getRepresentative() {
         return representative;
     }
 
-    public void setRepresentative(int representative) {
+    public void setRepresentative(Neuron representative) {
         this.representative = representative;
     }
 }

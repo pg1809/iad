@@ -71,7 +71,7 @@ public class OnlineTrainer implements GasTrainer {
                     Neuron neuron = collection.getNeurons().get(neuronNumber);
                     double distance = metric.distance(neuron, data.get(i));
                     if (distance < minDistance) {
-                        data.get(i).setRepresentative(neuronNumber);
+                        data.get(i).setRepresentative(neuron);
                         minDistance = distance;
                     }
                 }
