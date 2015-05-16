@@ -15,13 +15,17 @@ import pl.iad.quantization.algorithms.parameters.learning.PowerLearningFactor;
 import pl.iad.quantization.algorithms.parameters.neighbourhood.NeighbourhoodFactorProvider;
 import pl.iad.quantization.algorithms.parameters.neighbourhood.PowerNeighbourhoodFactor;
 import pl.iad.quantization.algorithms.gas.structure.NeuronCollection;
+import pl.iad.quantization.algorithms.gas.training.GasTrainer;
+import pl.iad.quantization.algorithms.gas.training.OnlineTrainer;
 import pl.iad.quantization.algorithms.kohonen.adaptation.GaussianNeighbourhoodFunction;
 import pl.iad.quantization.algorithms.kohonen.structure.NeuronMap;
 import pl.iad.quantization.algorithms.kohonen.training.SOMTrainer;
+import pl.iad.quantization.algorithms.parameters.learning.IndividualLearningFactor;
 import pl.iad.quantization.data.Point;
 import pl.iad.quantization.data.generator.CircleGenerator;
 import pl.iad.quantization.data.generator.RandomPointsGenerator;
 import pl.iad.quantization.data.metrics.EuclideanMetric;
+import pl.iad.quantization.data.metrics.MaximumMetric;
 import pl.iad.quantization.data.metrics.Metric;
 import pl.iad.quantization.graphics.GifMaker;
 import pl.iad.quantization.graphics.PlotGenerator;
@@ -42,12 +46,13 @@ public class TestApp {
         int numberOfPoints = 5000;
         int maxAbsCoordinates = 100;
 
-        NeuronCollection collection = new NeuronCollection(numberOfNeurons, 2, maxAbsCoordinates);
-
-        LearningFactorProvider learningFactorProvider
-                = new PowerLearningFactor(maxNumberOfEpochs - 1,
-                        PowerLearningFactor.DEFAULT_INITIAL_FACTOR,
-                        PowerLearningFactor.DEFAULT_MINIMUM_FACTOR);
+//
+//        LearningFactorProvider learningFactorProvider
+//                = new PowerLearningFactor(maxNumberOfEpochs - 1,
+//                        PowerLearningFactor.DEFAULT_INITIAL_FACTOR,
+//                        PowerLearningFactor.DEFAULT_MINIMUM_FACTOR);
+        
+        LearningFactorProvider learningFactorProvider = new IndividualLearningFactor();
 
         NeighbourhoodFactorProvider neighbourhoodFactorProvider
                 = new PowerNeighbourhoodFactor(maxNumberOfEpochs - 1,
@@ -57,7 +62,8 @@ public class TestApp {
         RandomPointsGenerator pointsGenerator = new CircleGenerator();
         List<Point> input = pointsGenerator.generatePoints(numberOfPoints, maxAbsCoordinates);
 
-        Metric metric = new EuclideanMetric();
+//        Metric metric = new EuclideanMetric();
+        Metric metric = new MaximumMetric();
 
 //        GasTrainer gasTrainer = new OnlineTrainer();
 //        List<Double> quantizationError = gasTrainer.trainNeurons(collection,
@@ -85,5 +91,25 @@ public class TestApp {
         } catch (IOException ex) {
             Logger.getLogger(TestApp.class.getName()).log(Level.SEVERE, null, ex);
         }
+//        NeuronCollection collection = new NeuronCollection(numberOfNeurons, 2, maxAbsCoordinates);
+//        GasTrainer gasTrainer = new OnlineTrainer(gifMaker);
+//        List<Double> quantizationError = gasTrainer.trainNeurons(collection,
+//                input, maxNumberOfEpochs, learningFactorProvider,
+//                neighbourhoodFactorProvider, metric);
+//
+//        for (Double error : quantizationError) {
+//            System.out.println(error);
+//        }
+
+//        NeuronMap som = new NeuronMap(numberOfNeurons / 8, numberOfNeurons / 5, 2, maxAbsCoordinates);
+//        SOMTrainer somTrainer = new SOMTrainer();
+//        somTrainer.setFunction(new GaussianNeighbourhoodFunction());
+//        somTrainer.setMetric(metric);
+//        somTrainer.setLearningFactorProvider(learningFactorProvider);
+//        somTrainer.setNeighbourhoodFactorProvider(neighbourhoodFactorProvider);
+//        somTrainer.setObserver(gifMaker);
+//        List<Double> errors = somTrainer.doTraining(som, input, maxNumberOfEpochs);
+//        errors.stream().forEach(System.out::println);
+        
     }
 }

@@ -6,5 +6,5 @@ package pl.iad.quantization.algorithms.parameters.learning;
  */
 public interface LearningFactorProvider {
 
-    double getLearningFactor(int epochIndex);
+    double getLearningFactor(int epochIndex, int neuronWins);
 }

@@ -36,9 +36,8 @@ public class SOMTrainer {
     public List<Double> doTraining(NeuronMap map, List<Point> data, int maxIterations) {
         List<Double> errors = new ArrayList<>(maxIterations);
         for (int i = 0; i <= maxIterations; ++i) {
-            double learningRate = learningFactorProvider.getLearningFactor(i);
             double radius = neighbourhoodFactorProvider.getNeighbourhoodFactor(i);
-            double error = doEpoch(map, data, learningRate, radius);
+            double error = doEpoch(i, map, data, radius);
             errors.add(error);
             
             observer.notifyAfterEpoch(map.getNeurons(), error);
@@ -47,7 +46,7 @@ public class SOMTrainer {
         return errors;
     }
 
-    private double doEpoch(NeuronMap map, List<Point> data, double lr, double radius) {
+    private double doEpoch(int epochIndex, NeuronMap map, List<Point> data, double radius) {
         Collections.shuffle(data);
         List<KohonenNeuron> neurons = map.getNeurons();
         for (Point point : data) {
@@ -61,10 +60,12 @@ public class SOMTrainer {
                     bmuDistance = dist;
                 }
             }
+            bmuNeuron.addWin();
 
             List<KohonenNeuron> bmuNeighbourhood = map.getNeighbourhoodOf(bmuNeuron, radius);
             for (KohonenNeuron neuron : bmuNeighbourhood) {
                 double distanceFunction = function.value(bmuNeuron, neuron, radius);
+                double lr = learningFactorProvider.getLearningFactor(epochIndex, neuron.getWins());
                 adjustWeights(neuron, point, lr, distanceFunction);
             }
 

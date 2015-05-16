@@ -59,8 +59,8 @@ public class GifMaker implements TrainingObserver {
         renderer.setSeriesLinesVisible(NEURONS_SERIES_IDX, false);
         renderer.setSeriesPaint(NEURONS_SERIES_IDX, Color.RED);
         renderer.setSeriesPaint(DATA_SERIES_IDX, Color.BLUE);
-        renderer.setSeriesShape(NEURONS_SERIES_IDX, new Ellipse2D.Double(0, 0, 0.7, 0.7));
-        renderer.setSeriesShape(DATA_SERIES_IDX, new Ellipse2D.Double(0, 0, 5, 5));
+        renderer.setSeriesShape(DATA_SERIES_IDX, new Ellipse2D.Double(0, 0, 0.7, 0.7));
+        renderer.setSeriesShape(NEURONS_SERIES_IDX, new Ellipse2D.Double(0, 0, 5, 5));
     }
     
     @Override

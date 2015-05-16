@@ -11,6 +11,7 @@ import pl.iad.quantization.algorithms.gas.structure.NeuronCollection;
 import pl.iad.quantization.data.Point;
 import pl.iad.quantization.data.metrics.DistanceCalculator;
 import pl.iad.quantization.data.metrics.Metric;
+import pl.iad.quantization.reporting.TrainingObserver;
 
 /**
  *
@@ -21,6 +22,12 @@ public class OnlineTrainer implements GasTrainer {
     private final static DistanceCalculator distanceCalculator = new DistanceCalculator();
 
     private final static NeighbourhoodCalculator neighbourhoodCalculator = new NeighbourhoodCalculator();
+
+    private final TrainingObserver trainingObserver;
+
+    public OnlineTrainer(TrainingObserver trainingObserver) {
+        this.trainingObserver = trainingObserver;
+    }
 
     @Override
     public List<Double> trainNeurons(NeuronCollection collection, List<Point> data,
@@ -34,16 +41,17 @@ public class OnlineTrainer implements GasTrainer {
             System.out.println("Epoch " + (epochIndex + 1));
 
             double neighbourhoodFactor = neighbourhoodFactorProvider.getNeighbourhoodFactor(epochIndex);
-            double learningFactor = learningFactorProvider.getLearningFactor(epochIndex);
 
             Collections.shuffle(data);
             for (Point point : data) {
                 distanceCalculator.calculateDistances(point, collection, metric);
                 Collections.sort(collection.getNeurons());
-
+                collection.getNeurons().get(0).addWin();
+                
                 for (int ranking = 0; ranking < collection.getNeurons().size(); ++ranking) {
                     Neuron neuron = collection.getNeurons().get(ranking);
                     double neighbourhood = neighbourhoodCalculator.calculateNeighbourhood(ranking, neighbourhoodFactor);
+                    double learningFactor = learningFactorProvider.getLearningFactor(epochIndex, neuron.getWins());
 
                     for (int i = 0; i < neuron.getWeights().length; ++i) {
                         double newWeight = neuron.getWeight(i);
@@ -71,7 +79,10 @@ public class OnlineTrainer implements GasTrainer {
                 distanceSum += minDistance;
             }
 
-            quantizationError.add(distanceSum / data.size());
+            double epochError = distanceSum / data.size();
+            quantizationError.add(epochError);
+
+            trainingObserver.notifyAfterEpoch(collection.getNeurons(), epochError);
         }
 
         return quantizationError;
