@@ -11,16 +11,16 @@ import pl.iad.quantization.data.Point;
  */
 public class CircleGenerator implements RandomPointsGenerator {
 
-    private final static Random generator = new Random();
+    private static Random generator = new Random(23474823947L);
 
     @Override
     public List<Point> generatePoints(int number, double maxAbsCoordinates) {
         List<Point> result = new ArrayList<>(number);
 
         for (int i = 0; i < number; ++i) {
-            double angle = Math.random() * Math.PI * 2;
-            double x = Math.cos(angle) * maxAbsCoordinates * Math.random();
-            double y = Math.sin(angle) * maxAbsCoordinates * Math.random();
+            double angle = generator.nextDouble() * Math.PI * 2;
+            double x = Math.cos(angle) * maxAbsCoordinates * generator.nextDouble();
+            double y = Math.sin(angle) * maxAbsCoordinates * generator.nextDouble();
 
             if (generator.nextBoolean()) {
                 x = -x;
@@ -35,5 +35,9 @@ public class CircleGenerator implements RandomPointsGenerator {
         }
 
         return result;
+    }
+
+    public static void setGenerator(Random generator) {
+        CircleGenerator.generator = generator;
     }
 }

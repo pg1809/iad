@@ -14,10 +14,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
@@ -90,12 +90,14 @@ public class GraphicReporter implements TrainingReporter {
         GifImage img = new GifImage();
         img.setDefaultDelay(delay);
         try {
+            BufferedImage image = null;
             for (int i = 0; i < preservedNeuronSeries.size(); ++i) {
                 XYSeries singleNeuronSeries = preservedNeuronSeries.get(i);
-                BufferedImage image = createImage(singleNeuronSeries, preservedErrors.get(i));
+                image = createImage(singleNeuronSeries, preservedErrors.get(i));
                 GifFrame frame = new GifFrame(image);
                 img.addGifFrame(frame);
             }
+            ImageIO.write(image, "png", new File(file.getAbsolutePath().replace(".gif", "-effect.png")));
         } catch (InterruptedException ex) {
             Logger.getLogger(GraphicReporter.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -117,7 +119,7 @@ public class GraphicReporter implements TrainingReporter {
         renderer.setSeriesLinesVisible(0, false);
         chart.getXYPlot().setRenderer(errorRenderer);
 
-        File XYChart = new File(plotFileName);
+        File XYChart = new File("C:\\Users\\Ardavel\\Desktop\\results\\" + plotFileName);
         ChartUtilities.saveChartAsJPEG(XYChart, chart, WIDTH, HEIGHT);
     }
 

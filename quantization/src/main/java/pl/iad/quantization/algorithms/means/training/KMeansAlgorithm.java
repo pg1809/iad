@@ -24,7 +24,7 @@ public class KMeansAlgorithm {
 
     private TrainingReporter reporter;
 
-    public void doQuantization(List<Point> data,
+    public double doQuantization(List<Point> data,
             double maxAbsCoordinates,
             int maxIterations,
             int repetitionNum,
@@ -42,6 +42,8 @@ public class KMeansAlgorithm {
             }
             reporter.clearRunData();
         }
+        
+        return error;
     }
 
     private double doAlgorithmRun(CentresSet centres, List<Point> data, int maxIterations) {

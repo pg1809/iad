@@ -11,15 +11,15 @@ import pl.iad.quantization.data.Point;
  */
 public class RectangleGenerator implements RandomPointsGenerator {
 
-    private final static Random generator = new Random();
+    private static Random generator = new Random(23474823947L);
 
     @Override
     public List<Point> generatePoints(int number, double maxAbsCoordinates) {
         List<Point> result = new ArrayList<>(number);
         
-        double x1 = getRandomCoordinate(maxAbsCoordinates);
+        double x1 = 0; // getRandomCoordinate(maxAbsCoordinates);
         double x2 = getRandomCoordinate(maxAbsCoordinates);
-        double y1 = getRandomCoordinate(maxAbsCoordinates);
+        double y1 = 0; // getRandomCoordinate(maxAbsCoordinates);
         double y2 = getRandomCoordinate(maxAbsCoordinates);
         
         if (x1 > x2) {
@@ -38,8 +38,8 @@ public class RectangleGenerator implements RandomPointsGenerator {
         double ySpan = y2 - y1;
         
         for (int i = 0; i < number; ++i) {
-            double x = Math.random() * xSpan + x1;
-            double y = Math.random() * ySpan + y1;
+            double x = generator.nextDouble() * xSpan + x1;
+            double y = generator.nextDouble() * ySpan + y1;
 
             Point point = new Point();
             point.setWeights(new double[]{x, y});
@@ -50,11 +50,15 @@ public class RectangleGenerator implements RandomPointsGenerator {
     }
     
     private double getRandomCoordinate(double maxAbsCoordinates) {
-        double result = Math.random() * maxAbsCoordinates;
+        double result = generator.nextDouble() * maxAbsCoordinates;
         if (generator.nextBoolean()) {
             result = -result;
         }
         
         return result;
+    }
+
+    public static void setGenerator(Random generator) {
+        RectangleGenerator.generator = generator;
     }
 }

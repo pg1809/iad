@@ -8,7 +8,6 @@ package pl.iad.quantization.algorithms.kohonen.training;
 import pl.iad.quantization.algorithms.kohonen.structure.NeuronMap;
 import pl.iad.quantization.algorithms.kohonen.structure.KohonenNeuron;
 import pl.iad.quantization.reporting.TrainingReporter;
-import java.util.ArrayList;
 import pl.iad.quantization.algorithms.kohonen.adaptation.NeighbourhoodFunction;
 import java.util.Collections;
 import java.util.List;
@@ -33,17 +32,22 @@ public class SOMTrainer {
 
     private TrainingReporter observer;
 
-    public void doTraining(NeuronMap map, List<Point> data, int maxIterations) {
-        for (int i = 0; i <= maxIterations; ++i) {
+    public double doTraining(NeuronMap map, List<Point> data, int maxIterations) {
+        double error = 0;
+        
+        for (int i = 0; i < maxIterations; ++i) {
+            System.out.println("Epoch " + (i + 1));
             double radius = neighbourhoodFactorProvider.getNeighbourhoodFactor(i);
-            double error = doEpoch(i, map, data, radius);
+            error = doEpoch(i, map, data, radius);
 
             if (observer != null) {
                 observer.notifyAfterEpoch(map.getNeurons(), error);
             }
         }
-
+        
         observer.preserveRunData();
+        
+        return error;
     }
 
     private double doEpoch(int epochIndex, NeuronMap map, List<Point> data, double radius) {
