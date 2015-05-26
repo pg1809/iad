@@ -52,6 +52,8 @@ public class ClassificationDialog extends javax.swing.JDialog {
     public ClassificationDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        setLocationRelativeTo(null);
+
         plotGenerator = new PlotGenerator();
         matrixGenerator = new ClassificationMatrixGenerator();
 

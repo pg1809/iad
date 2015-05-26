@@ -22,6 +22,8 @@ public class ClassificationMatrixDialog extends javax.swing.JDialog {
     public ClassificationMatrixDialog(java.awt.Frame parent, int[][] classificationMatrix) {
         super(parent, true);
         initComponents();
+        setLocationRelativeTo(null);
+        
         int rows = classificationMatrix.length + 1;
         int columns = classificationMatrix[0].length + 1;
         matrixView = new MatrixTile[rows][columns];

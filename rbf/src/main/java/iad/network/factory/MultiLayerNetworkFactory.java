@@ -37,16 +37,9 @@ public class MultiLayerNetworkFactory implements NetworkFactory {
     public MultiLayerNetwork createNetwork() throws CannotCreateNetworkException {
         MultiLayerNetwork network = new MultiLayerNetwork();
 
-        NeuronLayer inputLayer = createLayerWithNeurons(neuronsNumberPerLayer[0]);
-        network.setInputLayer(inputLayer);
-
-        int numberOfLayers = neuronsNumberPerLayer.length;
-        for (int i = 1; i < numberOfLayers - 1; ++i) {
-            network.addHiddenLayer(createLayerWithNeurons(neuronsNumberPerLayer[i]));
-        }
-
-        NeuronLayer outputLayer = createLayerWithNeurons(neuronsNumberPerLayer[numberOfLayers - 1]);
-        network.setOutputLayer(outputLayer);
+        network.setInputLayer(createLayerWithNeurons(neuronsNumberPerLayer[0]));
+        network.setHiddenLayer(createLayerWithNeurons(neuronsNumberPerLayer[1]));
+        network.setOutputLayer(createLayerWithNeurons(neuronsNumberPerLayer[2]));
 
         network.connectAllLayers();
 

@@ -48,14 +48,8 @@ public class MultiLayerNetwork extends AbstractNetwork {
     }
 
     public void connectAllLayers() {
-        connectLayers(inputLayer, hiddenLayers.get(0));
-
-        int numberOfHiddenLayers = hiddenLayers.size();
-        for (int i = 0; i < numberOfHiddenLayers - 1; ++i) {
-            connectLayers(hiddenLayers.get(i), hiddenLayers.get(i + 1));
-        }
-
-        connectLayers(hiddenLayers.get(hiddenLayers.size() - 1), outputLayer);
+        connectLayers(inputLayer, hiddenLayer);
+        connectLayers(hiddenLayer, outputLayer);
     }
 
     public void printNetworkInputs() {

@@ -50,26 +50,17 @@ public abstract class NetworkTrainer {
     protected void trainNetworkWithSample(AbstractNetwork network, double[] expectedOutput, double[] sample) {
         network.runNetwork(sample);
         network.getOutputLayer().updateDelta(expectedOutput, learningRate);
+        network.getHiddenLayer().updateDelta(null, learningRate);
 
-        List<NeuronLayer> hiddenLayers = network.getHiddenLayers();
-        for (int i = hiddenLayers.size() - 1; i >= 0; --i) {
-            hiddenLayers.get(i).updateDelta(null, learningRate);
-        }
-
-        for (NeuronLayer hiddenLayer : hiddenLayers) {
-            hiddenLayer.updateParameters(momentumFactor);
-        }
-
+        network.getHiddenLayer().updateParameters(momentumFactor);
         network.getOutputLayer().updateParameters(momentumFactor);
     }
 
     protected void generateStartingWeights(AbstractNetwork network) {
         Random random = new Random();
+
         generateStartingWeightsForLayer(network.getInputLayer(), random);
-
-        network.getHiddenLayers().stream()
-                .forEach((NeuronLayer hiddenLayer) -> generateStartingWeightsForLayer(hiddenLayer, random));
-
+        generateStartingWeightsForLayer(network.getHiddenLayer(), random);
         generateStartingWeightsForLayer(network.getOutputLayer(), random);
     }
 

@@ -25,6 +25,8 @@ public class IADFrame extends javax.swing.JFrame {
      */
     public IADFrame() {
         initComponents();
+        setLocationRelativeTo(null);
+        
         classificationDialog = new ClassificationDialog(this, true);
         approximationDialog = new ApproximationDialog(this, true);
         executor = Executors.newCachedThreadPool();
@@ -43,7 +45,7 @@ public class IADFrame extends javax.swing.JFrame {
         classificationButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("IAD Zadanie 1");
+        setTitle("Sieci RBF");
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         approximationButton.setText("Aproksymacja");

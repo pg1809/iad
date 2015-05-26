@@ -50,6 +50,7 @@ public class ApproximationDialog extends javax.swing.JDialog {
         super(parent, modal);
         generator = new PlotGenerator();
         initComponents();
+        setLocationRelativeTo(null);
 
         networkCreationParamsPanel.fixNetworkInputsField(1);
         networkCreationParamsPanel.fixNetworkOutputField(1);
@@ -233,8 +234,6 @@ public class ApproximationDialog extends javax.swing.JDialog {
             ResultsPlotData resultsPlotData = new ResultsPlotData();
             resultsPlotData.setInputs(trainingData);
             resultsPlotData.setOutputs(networkResults);
-            resultsPlotData.setxAxisLabel("arguments");
-            resultsPlotData.setyAxisLabel("function values");
             resultsPlotData.setPlotName("Approximation");
 
             generator.generateResultsChart(resultsPlotData);
