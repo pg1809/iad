@@ -8,6 +8,6 @@ public class IndividualLearningFactor implements LearningFactorProvider {
 
     @Override
     public double getLearningFactor(int epochIndex, int neuronWins) {
-        return 1.0 / (1 + neuronWins);
+        return 2.0 / (1 + neuronWins);
     }
 }

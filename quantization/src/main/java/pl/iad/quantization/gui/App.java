@@ -19,6 +19,7 @@ import pl.iad.quantization.algorithms.parameters.learning.PowerLearningFactor;
 import pl.iad.quantization.algorithms.parameters.neighbourhood.NeighbourhoodFactorProvider;
 import pl.iad.quantization.algorithms.parameters.neighbourhood.PowerNeighbourhoodFactor;
 import pl.iad.quantization.data.Point;
+import pl.iad.quantization.data.generator.FileReader;
 import pl.iad.quantization.data.generator.ManyFiguresGenerator;
 import pl.iad.quantization.data.generator.RandomPointsGenerator;
 import pl.iad.quantization.data.images.ImageData;
@@ -35,13 +36,13 @@ import pl.iad.quantization.graphics.GraphicReporter;
  */
 public class App {
 
-    private static final int maxIterations = 500;
+    private static final int maxIterations = 200;
 
     private static final int numberOfPoints = 10;
 
-    private static final int numberOfNeurons = 256;
+    private static final int numberOfNeurons = 50;
 
-    private static final double maxAbsCoordinates = 100;
+    private static final double maxAbsCoordinates = 12;
 
     private static final LearningFactorProvider individualLearningFactor
             = new IndividualLearningFactor();
@@ -64,20 +65,23 @@ public class App {
 //    private static final RandomPointsGenerator inputProvider = new CircleGenerator();
     private static final RandomPointsGenerator inputProvider = new ManyFiguresGenerator();
 
-    private static List<Point> input;
+    private static final FileReader fileReader = new FileReader();
+
+    private static List<Point> input
+            = fileReader.readPointsFromFile(new File("C:\\Users\\Ardavel\\Desktop\\images\\data.txt"));
 
     public static void main(String[] args) throws IOException {
-        input = inputProvider.generatePoints(numberOfPoints, maxAbsCoordinates / 2);
+//        input = inputProvider.generatePoints(numberOfPoints, maxAbsCoordinates / 2);
 
 //        runKohonen();
 //        runGas();
-//        runKMeans();
-        runCompression();
+        runKMeans();
+//        runCompression();
     }
 
     private static void runKohonen() throws IOException {
-        int x = 4;
-        int y = 5;
+        int x = 20;
+        int y = 20;
         int dimension = 2;
 
         GraphicReporter graphicReporter = new GraphicReporter(input);
@@ -178,7 +182,7 @@ public class App {
         }
         fileName += "-" + frameSize;
 
-        String imageFileName = "drawing";
+        String imageFileName = "ducks";
         String convertedFileName = imageFileName + "-" + fileName;
 
         File imageFile = new File("C:\\Users\\Ardavel\\Desktop\\images\\" + imageFileName + ".png");
