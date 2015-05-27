@@ -1,6 +1,8 @@
 package iad.network.training;
 
 import iad.network.AbstractNetwork;
+import iad.network.centers.CentersAdjustmentStrategy;
+import iad.network.centers.RandomCentersStrategy;
 import iad.network.input.InputRow;
 import iad.network.layer.NeuronLayer;
 import iad.network.neuron.AbstractNeuron;
@@ -18,10 +20,12 @@ public abstract class NetworkTrainer {
 
     private final static double DEFAULT_MOMENTUM_FACTOR = 0;
 
+    private final static CentersAdjustmentStrategy centersAdjustmentStrategy = new RandomCentersStrategy();
+            
     protected double learningRate = DEFAULT_LEARNING_RATE;
 
     protected double momentumFactor = DEFAULT_MOMENTUM_FACTOR;
-
+    
     public abstract List<Double> trainNetwork(AbstractNetwork network, List<InputRow> trainingData);
 
     protected double trainNetworkWithSampleSet(AbstractNetwork network, List<InputRow> trainingData) {
@@ -56,6 +60,10 @@ public abstract class NetworkTrainer {
         network.getOutputLayer().updateParameters(momentumFactor);
     }
 
+    protected void adjustCentersInRadialLayer(NeuronLayer radialLayer, List<InputRow> data) {
+        centersAdjustmentStrategy.adjustCenters(radialLayer, data);
+    }
+    
     protected void generateStartingWeights(AbstractNetwork network) {
         Random random = new Random();
 

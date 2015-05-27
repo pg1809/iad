@@ -2,7 +2,10 @@ package iad.network.training;
 
 import iad.network.AbstractNetwork;
 import iad.network.input.InputRow;
+import iad.network.neuron.AbstractNeuron;
+import iad.network.neuron.RadialNeuron;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -27,6 +30,7 @@ public class ThresholdEpochNetworkTrainer extends NetworkTrainer {
     @Override
     public List<Double> trainNetwork(AbstractNetwork network, List<InputRow> trainingData) {
         generateStartingWeights(network);
+        adjustCentersInRadialLayer(network.getHiddenLayer(), trainingData);
 
         List<Double> meanSquaredErrors = new ArrayList<>();
 

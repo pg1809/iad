@@ -11,7 +11,8 @@ import iad.network.factory.MultiLayerNetworkFactory;
 import iad.network.input.InputRow;
 import iad.network.input.TrainingDataProvider;
 import iad.network.neuron.AbstractNeuron;
-import iad.network.strategy.bp.BackPropagationStrategy;
+import iad.network.strategy.NeuronStrategy;
+import iad.network.strategy.bp.BiasStrategyDecorator;
 import iad.network.strategy.bp.IdentityActivationBPS;
 import iad.network.training.ThresholdEpochNetworkTrainer;
 import iad.ui.exceptions.EmptyInputFieldException;
@@ -54,7 +55,7 @@ public class ApproximationDialog extends javax.swing.JDialog {
 
         networkCreationParamsPanel.fixNetworkInputsField(1);
         networkCreationParamsPanel.fixNetworkOutputField(1);
-        learningParamsInputPanel.setDefaultLearningRate(0.4);
+        learningParamsInputPanel.setDefaultLearningRate(0.3);
     }
 
     /**
@@ -249,7 +250,7 @@ public class ApproximationDialog extends javax.swing.JDialog {
             outputNeurons = networkCreationParamsPanel.getNetworkOutputsNum();
             hiddenNeurons = networkCreationParamsPanel.getHiddenNeuronsNum();
 
-            BackPropagationStrategy strategy = BackPropagationStrategy.getInstance();
+            NeuronStrategy strategy = new BiasStrategyDecorator(IdentityActivationBPS.getInstance());
             IdentityActivationBPS identityStrategy = IdentityActivationBPS.getInstance();
             MultiLayerNetworkFactory factory = new MultiLayerNetworkFactory(
                     new int[]{inputNeurons, hiddenNeurons, outputNeurons}, strategy, true);

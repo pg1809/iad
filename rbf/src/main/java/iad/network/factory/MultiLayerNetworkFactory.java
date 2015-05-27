@@ -5,6 +5,7 @@ import iad.network.exceptions.CannotCreateNetworkException;
 import iad.network.layer.NeuronLayer;
 import iad.network.neuron.AbstractNeuron;
 import iad.network.neuron.Neuron;
+import iad.network.neuron.RadialNeuron;
 import iad.network.strategy.NeuronStrategy;
 import iad.network.strategy.bp.BiasStrategyDecorator;
 import java.util.Random;
@@ -38,7 +39,7 @@ public class MultiLayerNetworkFactory implements NetworkFactory {
         MultiLayerNetwork network = new MultiLayerNetwork();
 
         network.setInputLayer(createLayerWithNeurons(neuronsNumberPerLayer[0]));
-        network.setHiddenLayer(createLayerWithNeurons(neuronsNumberPerLayer[1]));
+        network.setHiddenLayer(createRadialLayer(neuronsNumberPerLayer[1]));
         network.setOutputLayer(createLayerWithNeurons(neuronsNumberPerLayer[2]));
 
         network.connectAllLayers();
@@ -55,6 +56,14 @@ public class MultiLayerNetworkFactory implements NetworkFactory {
                 neuron.setPreviousBias(neuron.getBias());
             }
             layer.addNeuron(neuron);
+        }
+        return layer;
+    }
+    
+    private NeuronLayer createRadialLayer(int numberOfNeurons) {
+        NeuronLayer layer = new NeuronLayer();
+        for (int i = 0; i < numberOfNeurons; ++i) {
+            layer.addNeuron(new RadialNeuron());
         }
         return layer;
     }
