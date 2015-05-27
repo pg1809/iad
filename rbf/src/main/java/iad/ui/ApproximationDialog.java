@@ -193,6 +193,7 @@ public class ApproximationDialog extends javax.swing.JDialog {
             ResultsPlotData resultsPlotData = new ResultsPlotData();
             resultsPlotData.setInputs(trainingData);
             resultsPlotData.setOutputs(networkResults);
+            resultsPlotData.setyAxisLabel("");
             resultsPlotData.setPlotName("Approximation");
 
             plotFileName = new PlotNamer().setBaseName("trainingResult")
