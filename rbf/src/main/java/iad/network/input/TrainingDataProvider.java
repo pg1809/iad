@@ -17,6 +17,8 @@ public class TrainingDataProvider implements InputProvider {
     protected List<InputRow> dataset;
 
     private int nextRow = 0;
+    
+    private InputNormalizer normalizer;
 
     protected TrainingDataProvider() {
     }
@@ -53,6 +55,7 @@ public class TrainingDataProvider implements InputProvider {
             dataset.add(new InputRow(inputValues, outputValues));
         }
 
+        this.normalizer = normalizer;
         normalizer.setMin(min);
         normalizer.initializeSpan(max);
     }
@@ -64,7 +67,9 @@ public class TrainingDataProvider implements InputProvider {
 
     @Override
     public InputRow provideInputRow() {
-        return dataset.get(nextRow++);
+        InputRow result = dataset.get(nextRow++);
+        result.setValues(normalizer.normalize(result.getValues()));
+        return result;
     }
 
     @Override
@@ -72,7 +77,7 @@ public class TrainingDataProvider implements InputProvider {
         List<InputRow> result = new ArrayList<>();
 
         while (nextRow < dataset.size()) {
-            result.add(dataset.get(nextRow++));
+            result.add(provideInputRow());
         }
 
         return result;

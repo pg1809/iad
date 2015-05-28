@@ -33,15 +33,15 @@ public class RandomCentersStrategy implements CentersAdjustmentStrategy {
 
         Collections.shuffle(layer);
 
-//        int counter = 0;
-//        double[] extremes = new double[]{-3.8, -2.5, 1.6, 2.8, 3.8};
-//        double[] factors = new double[]{1, 0.6, 0.2};
-//        for (AbstractNeuron neuron : radialLayer.getNeurons()) {
-//            RadialNeuron n = (RadialNeuron) neuron;
-//            n.setCoordinates(new double[]{extremes[counter]});
+        int counter = 0;
+        double[] extremes = new double[]{0, 0.1, 0.5, 0.7, 1};
+//        double[] factors = new double[]{0.05, 0.05, 0.1, 0.1, 0.15};
+        for (AbstractNeuron neuron : radialLayer.getNeurons()) {
+            RadialNeuron n = (RadialNeuron) neuron;
+            n.setCoordinates(new double[]{extremes[counter]});
 //            n.setWidthScalingFactor(factors[counter]);
-//            ++counter;
-//        }
+            ++counter;
+        }
 
         for (AbstractNeuron neuron : radialLayer.getNeurons()) {
             for (RadialNeuron other : layer) {
@@ -56,9 +56,9 @@ public class RandomCentersStrategy implements CentersAdjustmentStrategy {
                 averageSquaredDistance
                         += Math.pow(DistanceCalculator.distance((RadialNeuron) neuron, layer.get(i)), 2);
             }
-            averageSquaredDistance /= nearestNeighbours;
+            averageSquaredDistance = Math.sqrt(averageSquaredDistance);
 
-            ((RadialNeuron) neuron).setWidthScalingFactor(Math.sqrt(averageSquaredDistance));
+            ((RadialNeuron) neuron).setWidthScalingFactor(averageSquaredDistance / nearestNeighbours);
         }
     }
 }

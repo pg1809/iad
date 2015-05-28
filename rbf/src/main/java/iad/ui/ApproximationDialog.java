@@ -11,7 +11,6 @@ import iad.network.factory.MultiLayerNetworkFactory;
 import iad.network.input.InputRow;
 import iad.network.input.TrainingDataProvider;
 import iad.network.neuron.AbstractNeuron;
-import iad.network.normalization.InputNormalizer;
 import iad.network.normalization.MinMaxInputNormalizer;
 import iad.network.strategy.NeuronStrategy;
 import iad.network.strategy.bp.BiasStrategyDecorator;
@@ -50,6 +49,9 @@ public class ApproximationDialog extends javax.swing.JDialog {
 
     /**
      * Creates new form ApproximationDialog
+     *
+     * @param parent
+     * @param modal
      */
     public ApproximationDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -59,7 +61,10 @@ public class ApproximationDialog extends javax.swing.JDialog {
 
         networkCreationParamsPanel.fixNetworkInputsField(1);
         networkCreationParamsPanel.fixNetworkOutputField(1);
-        learningParamsInputPanel.setDefaultLearningRate(0.3);
+        learningParamsInputPanel.setDefaultLearningRate(0.01);
+        learningParamsInputPanel.setDefaultMomentum(0);
+        learningParamsInputPanel.setDefaultError(0.001);
+        learningParamsInputPanel.setDefaultEpochNum(2500);
     }
 
     /**
@@ -193,6 +198,11 @@ public class ApproximationDialog extends javax.swing.JDialog {
             trainingData.stream().forEach(
                     (InputRow row) -> networkResults.add(network.runNetwork(row.getValues()))
             );
+
+            for (InputRow row : trainingData) {
+                double[] values = row.getValues();
+                row.setValues(normalizer.denormalize(values));
+            }
 
             ResultsPlotData resultsPlotData = new ResultsPlotData();
             resultsPlotData.setInputs(trainingData);

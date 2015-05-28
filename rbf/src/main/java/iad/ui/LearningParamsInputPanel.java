@@ -33,7 +33,7 @@ public class LearningParamsInputPanel extends javax.swing.JPanel {
         errorThresholdInput.setText(String.valueOf(error));
     }
 
-    public void setDefaultEpochNum(double epochNum) {
+    public void setDefaultEpochNum(int epochNum) {
         maxEpochNumInput.setText(String.valueOf(epochNum));
     }
 
