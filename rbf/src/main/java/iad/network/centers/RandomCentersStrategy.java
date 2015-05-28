@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class RandomCentersStrategy implements CentersAdjustmentStrategy {
 
-    private final static int NEAREST_NEIGHBOURS = 1;
+    private final static int NEAREST_NEIGHBOURS = 2;
 
     @Override
     public void adjustCenters(NeuronLayer radialLayer, List<InputRow> data) {
@@ -31,14 +31,17 @@ public class RandomCentersStrategy implements CentersAdjustmentStrategy {
             ((RadialNeuron) layer.get(i)).setCoordinates(dataCopy.get(i).getValues());
         }
 
+        Collections.shuffle(layer);
+
 //        int counter = 0;
-//        double[] extremes = new double[]{-2.5, 1.6, 2.8};
+//        double[] extremes = new double[]{-3.8, -2.5, 1.6, 2.8, 3.8};
+//        double[] factors = new double[]{1, 0.6, 0.2};
 //        for (AbstractNeuron neuron : radialLayer.getNeurons()) {
 //            RadialNeuron n = (RadialNeuron) neuron;
-//            n.setCoordinates(new double[]{extremes[counter++]});
+//            n.setCoordinates(new double[]{extremes[counter]});
+//            n.setWidthScalingFactor(factors[counter]);
+//            ++counter;
 //        }
-
-        Collections.shuffle(layer);
 
         for (AbstractNeuron neuron : radialLayer.getNeurons()) {
             for (RadialNeuron other : layer) {

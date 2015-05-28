@@ -11,6 +11,8 @@ import iad.network.factory.MultiLayerNetworkFactory;
 import iad.network.input.InputRow;
 import iad.network.input.TrainingDataProvider;
 import iad.network.neuron.AbstractNeuron;
+import iad.network.normalization.InputNormalizer;
+import iad.network.normalization.MinMaxInputNormalizer;
 import iad.network.strategy.NeuronStrategy;
 import iad.network.strategy.bp.BiasStrategyDecorator;
 import iad.network.strategy.bp.IdentityActivationBPS;
@@ -43,6 +45,8 @@ public class ApproximationDialog extends javax.swing.JDialog {
     private int inputNeurons;
 
     private int outputNeurons;
+
+    private final MinMaxInputNormalizer normalizer = new MinMaxInputNormalizer();
 
     /**
      * Creates new form ApproximationDialog
@@ -172,7 +176,7 @@ public class ApproximationDialog extends javax.swing.JDialog {
             double error = learningParamsInputPanel.getErrorThreshold();
 
             TrainingDataProvider provider = new TrainingDataProvider(
-                    chosenFile, inputNeurons, outputNeurons, " ");
+                    chosenFile, inputNeurons, outputNeurons, " ", normalizer);
             List<InputRow> trainingData = provider.provideAllRows();
 
             ThresholdEpochNetworkTrainer trainer
@@ -225,13 +229,18 @@ public class ApproximationDialog extends javax.swing.JDialog {
             File chosenFile = trainingDataFileChooser.getSelectedFile();
 
             TrainingDataProvider provider = new TrainingDataProvider(
-                    chosenFile, inputNeurons, outputNeurons, " ");
+                    chosenFile, inputNeurons, outputNeurons, " ", normalizer);
             List<InputRow> trainingData = provider.provideAllRows();
 
             List<double[]> networkResults = new ArrayList<>(trainingData.size());
             trainingData.stream().forEach(
                     (InputRow row) -> networkResults.add(network.runNetwork(row.getValues()))
             );
+
+            for (InputRow row : trainingData) {
+                double[] values = row.getValues();
+                row.setValues(normalizer.denormalize(values));
+            }
 
             ResultsPlotData resultsPlotData = new ResultsPlotData();
             resultsPlotData.setInputs(trainingData);

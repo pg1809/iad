@@ -1,5 +1,7 @@
 package iad.network.input;
 
+import iad.network.normalization.InputNormalizer;
+import iad.network.normalization.MinMaxInputNormalizer;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,15 +16,23 @@ public class TrainingDataProvider implements InputProvider {
 
     protected List<InputRow> dataset;
 
-    int nextRow = 0;
+    private int nextRow = 0;
 
     protected TrainingDataProvider() {
     }
 
-    public TrainingDataProvider(File inputFile, int inputs, int outputs, String separator) throws IOException {
+    public TrainingDataProvider(File inputFile, int inputs, int outputs, String separator, MinMaxInputNormalizer normalizer)
+            throws IOException {
         Scanner sc = new Scanner(inputFile);
 
         dataset = new ArrayList<>();
+
+        double[] min = new double[inputs];
+        double[] max = new double[inputs];
+        for (int i = 0; i < inputs; ++i) {
+            min[i] = Double.MAX_VALUE;
+            max[i] = Double.MIN_VALUE;
+        }
 
         while (sc.hasNext()) {
             String line = sc.nextLine();
@@ -31,6 +41,8 @@ public class TrainingDataProvider implements InputProvider {
             double[] inputValues = new double[inputs];
             for (int i = 0; i < inputs; ++i) {
                 inputValues[i] = Double.parseDouble(stringNums[i]);
+                min[i] = Math.min(min[i], inputValues[i]);
+                max[i] = Math.max(max[i], inputValues[i]);
             }
 
             double[] outputValues = new double[outputs];
@@ -40,6 +52,9 @@ public class TrainingDataProvider implements InputProvider {
 
             dataset.add(new InputRow(inputValues, outputValues));
         }
+
+        normalizer.setMin(min);
+        normalizer.initializeSpan(max);
     }
 
     @Override

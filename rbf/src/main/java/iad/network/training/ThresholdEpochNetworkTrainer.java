@@ -40,7 +40,7 @@ public class ThresholdEpochNetworkTrainer extends NetworkTrainer {
 
             double error = trainNetworkWithSampleSet(network, trainingData);
             meanSquaredErrors.add(error);
-
+            
             if (error <= errorThreshold) {
                 return meanSquaredErrors;
             }
