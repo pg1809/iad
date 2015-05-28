@@ -188,6 +188,8 @@ public class ApproximationDialog extends javax.swing.JDialog {
                     = new ThresholdEpochNetworkTrainer(maxEpochNum, error, learningRate, momentumFactor);
             List<Double> meanSquaredError = trainer.trainNetwork(network, trainingData);
 
+            System.out.println(meanSquaredError.get(meanSquaredError.size() - 1));
+
             String plotFileName = new PlotNamer().setBaseName("error").setEpochs(meanSquaredError.size()).setHiddenNeurons(hiddenNeurons)
                     .setLearningRate(learningRate).setMomentumFactor(momentumFactor)
                     .generateName();
@@ -243,9 +245,18 @@ public class ApproximationDialog extends javax.swing.JDialog {
             List<InputRow> trainingData = provider.provideAllRows();
 
             List<double[]> networkResults = new ArrayList<>(trainingData.size());
-            trainingData.stream().forEach(
-                    (InputRow row) -> networkResults.add(network.runNetwork(row.getValues()))
-            );
+            double overallError = 0;
+            for (InputRow row : trainingData) {
+                double[] output = network.runNetwork(row.getValues());
+
+                double idealOutput = row.getExpectedOutput()[0];
+                overallError += Math.pow(idealOutput - output[0], 2);
+
+                networkResults.add(output);
+            }
+            overallError /= trainingData.size() * 2;
+
+            System.out.println(overallError);
 
             for (InputRow row : trainingData) {
                 double[] values = row.getValues();
