@@ -34,12 +34,10 @@ public class RandomCentersStrategy implements CentersAdjustmentStrategy {
         Collections.shuffle(layer);
 
         int counter = 0;
-        double[] extremes = new double[]{0, 0.1, 0.5, 0.7, 1};
-//        double[] factors = new double[]{0.05, 0.05, 0.1, 0.1, 0.15};
+        double[] extremes = new double[]{0, 0.1, 0.6, 0.9, 1};
         for (AbstractNeuron neuron : radialLayer.getNeurons()) {
             RadialNeuron n = (RadialNeuron) neuron;
             n.setCoordinates(new double[]{extremes[counter]});
-//            n.setWidthScalingFactor(factors[counter]);
             ++counter;
         }
 
