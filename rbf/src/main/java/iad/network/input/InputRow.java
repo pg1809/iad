@@ -1,5 +1,7 @@
 package iad.network.input;
 
+import java.util.Arrays;
+
 /**
  *
  * @author Wojciech Szałapski

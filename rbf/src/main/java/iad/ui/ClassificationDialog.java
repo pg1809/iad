@@ -10,8 +10,13 @@ import iad.network.exceptions.CannotCreateNetworkException;
 import iad.network.factory.MultiLayerNetworkFactory;
 import iad.network.input.ClassificationDataProvider;
 import iad.network.input.InputRow;
+import iad.network.neuron.AbstractNeuron;
+import iad.network.normalization.MinMaxInputNormalizer;
 import iad.network.output.ClassificationMatrixGenerator;
+import iad.network.strategy.NeuronStrategy;
 import iad.network.strategy.bp.BackPropagationStrategy;
+import iad.network.strategy.bp.BiasStrategyDecorator;
+import iad.network.strategy.bp.IdentityActivationBPS;
 import iad.network.training.ThresholdEpochNetworkTrainer;
 import iad.ui.exceptions.EmptyInputFieldException;
 import iad.ui.exceptions.IncorrectParamsStringException;
@@ -38,6 +43,8 @@ public class ClassificationDialog extends javax.swing.JDialog {
 
     private final ClassificationMatrixGenerator matrixGenerator;
 
+    private final MinMaxInputNormalizer normalizer = new MinMaxInputNormalizer();
+
     private MultiLayerNetwork network;
 
     private int inputNeurons;
@@ -58,7 +65,11 @@ public class ClassificationDialog extends javax.swing.JDialog {
         matrixGenerator = new ClassificationMatrixGenerator();
 
         networkCreationParamsPanel.fixNetworkOutputField(3);
-        learningParamsInputPanel.setDefaultLearningRate(0.4);
+        learningParamsInputPanel.setDefaultLearningRate(0.01);
+        learningParamsInputPanel.setDefaultMomentum(0);
+        learningParamsInputPanel.setDefaultError(0.001);
+        learningParamsInputPanel.setDefaultEpochNum(2500);
+
     }
 
     /**
@@ -196,7 +207,7 @@ public class ClassificationDialog extends javax.swing.JDialog {
             int[] classificationInputs = readClassificationInputsNumbers();
 
             ClassificationDataProvider provider = new ClassificationDataProvider(
-                    chosenFile, outputNeurons, " ", classificationInputs);
+                    chosenFile, outputNeurons, " ", classificationInputs, normalizer);
 
             List<InputRow> trainingData = provider.provideAllRows();
 
@@ -246,7 +257,7 @@ public class ClassificationDialog extends javax.swing.JDialog {
             int[] classificationInputs = readClassificationInputsNumbers();
 
             ClassificationDataProvider provider = new ClassificationDataProvider(
-                    chosenFile, outputNeurons, " ", classificationInputs);
+                    chosenFile, outputNeurons, " ", classificationInputs, normalizer);
             List<InputRow> data = provider.provideAllRows();
 
             List<double[]> networkResults = new ArrayList<>(data.size());
@@ -272,10 +283,12 @@ public class ClassificationDialog extends javax.swing.JDialog {
             outputNeurons = networkCreationParamsPanel.getNetworkOutputsNum();
             hiddenNeurons = networkCreationParamsPanel.getHiddenNeuronsNum();
 
-            BackPropagationStrategy strategy = BackPropagationStrategy.getInstance();
+            NeuronStrategy strategy = new BiasStrategyDecorator(IdentityActivationBPS.getInstance());
+            IdentityActivationBPS identityStrategy = IdentityActivationBPS.getInstance();
             MultiLayerNetworkFactory factory = new MultiLayerNetworkFactory(
                     new int[]{inputNeurons, hiddenNeurons, outputNeurons}, strategy, true);
             network = factory.createNetwork();
+            network.getOutputLayer().getNeurons().stream().forEach((AbstractNeuron n) -> n.setStrategy(identityStrategy));
 
             JOptionPane.showMessageDialog(this, "Tworzenie sieci zakończone sukcesem", "Sukces",
                     JOptionPane.INFORMATION_MESSAGE);
@@ -283,7 +296,7 @@ public class ClassificationDialog extends javax.swing.JDialog {
             trainNetworkButton.setEnabled(true);
             testNetworkButton.setEnabled(true);
         } catch (EmptyInputFieldException | CannotCreateNetworkException ex) {
-            Logger.getLogger(ClassificationDialog.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApproximationDialog.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Błąd", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_createNetworkButtonActionPerformed

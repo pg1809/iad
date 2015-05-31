@@ -18,7 +18,7 @@ public class TrainingDataProvider implements InputProvider {
 
     private int nextRow = 0;
     
-    private InputNormalizer normalizer;
+    protected InputNormalizer normalizer;
 
     protected TrainingDataProvider() {
     }

@@ -2,6 +2,7 @@ package iad.network.training;
 
 import iad.network.AbstractNetwork;
 import iad.network.centers.CentersAdjustmentStrategy;
+import iad.network.centers.KMeansStrategy;
 import iad.network.centers.RandomCentersStrategy;
 import iad.network.input.InputRow;
 import iad.network.layer.NeuronLayer;
@@ -20,7 +21,8 @@ public abstract class NetworkTrainer {
 
     private final static double DEFAULT_MOMENTUM_FACTOR = 0;
 
-    private final static CentersAdjustmentStrategy centersAdjustmentStrategy = new RandomCentersStrategy();
+    private final static CentersAdjustmentStrategy centersAdjustmentStrategy = new KMeansStrategy();
+    //private final static CentersAdjustmentStrategy centersAdjustmentStrategy = new RandomCentersStrategy();
             
     protected double learningRate = DEFAULT_LEARNING_RATE;
 

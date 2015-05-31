@@ -13,9 +13,7 @@ import java.util.List;
  *
  * @author Wojciech Szałapski
  */
-public class RandomCentersStrategy implements CentersAdjustmentStrategy {
-
-    private final static int NEAREST_NEIGHBOURS = 2;
+public class RandomCentersStrategy extends AbstractStrategy {
 
     @Override
     public void adjustCenters(NeuronLayer radialLayer, List<InputRow> data) {
@@ -28,7 +26,7 @@ public class RandomCentersStrategy implements CentersAdjustmentStrategy {
         Collections.shuffle(dataCopy);
 
         for (int i = 0; i < layer.size(); ++i) {
-            ((RadialNeuron) layer.get(i)).setCoordinates(dataCopy.get(i).getValues());
+            layer.get(i).setCoordinates(dataCopy.get(i).getValues());
         }
 
         Collections.shuffle(layer);
@@ -41,22 +39,23 @@ public class RandomCentersStrategy implements CentersAdjustmentStrategy {
 //            ++counter;
 //        }
 
-        for (AbstractNeuron neuron : radialLayer.getNeurons()) {
-            for (RadialNeuron other : layer) {
-                other.setDistanceToNeighbour(DistanceCalculator.distance((RadialNeuron) neuron, other));
-            }
-
-            Collections.sort(layer);
-
-            double averageSquaredDistance = 0;
-            int nearestNeighbours = Math.min(NEAREST_NEIGHBOURS, layer.size() - 1);
-            for (int i = 1; i <= nearestNeighbours; ++i) {
-                averageSquaredDistance
-                        += Math.pow(DistanceCalculator.distance((RadialNeuron) neuron, layer.get(i)), 2);
-            }
-            averageSquaredDistance = Math.sqrt(averageSquaredDistance);
-
-            ((RadialNeuron) neuron).setWidthScalingFactor(averageSquaredDistance / nearestNeighbours);
-        }
+//        for (AbstractNeuron neuron : radialLayer.getNeurons()) {
+//            for (RadialNeuron other : layer) {
+//                other.setDistanceToNeighbour(DistanceCalculator.distance((RadialNeuron) neuron, other));
+//            }
+//
+//            Collections.sort(layer);
+//
+//            double averageSquaredDistance = 0;
+//            int nearestNeighbours = Math.min(NEAREST_NEIGHBOURS, layer.size() - 1);
+//            for (int i = 1; i <= nearestNeighbours; ++i) {
+//                averageSquaredDistance
+//                        += Math.pow(DistanceCalculator.distance((RadialNeuron) neuron, layer.get(i)), 2);
+//            }
+//            averageSquaredDistance = Math.sqrt(averageSquaredDistance);
+//
+//            ((RadialNeuron) neuron).setWidthScalingFactor(averageSquaredDistance / nearestNeighbours);
+//        }
+        setScalingFactorForNeurons(radialLayer, layer);
     }
 }

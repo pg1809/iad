@@ -12,6 +12,8 @@ public class RadialNeuron extends AbstractNeuron implements Comparable<RadialNeu
     
     private double distanceToNeighbour;
 
+    private double distanceShift;
+
     @Override
     public int compareTo(RadialNeuron other) {
         return (distanceToNeighbour > other.distanceToNeighbour ? 1 : -1);
@@ -67,5 +69,13 @@ public class RadialNeuron extends AbstractNeuron implements Comparable<RadialNeu
 
     public void setDistanceToNeighbour(double distanceToNeighbour) {
         this.distanceToNeighbour = distanceToNeighbour;
+    }
+
+    public double getDistanceShift() {
+        return distanceShift;
+    }
+
+    public void setDistanceShift(double distanceShift) {
+        this.distanceShift = distanceShift;
     }
 }
