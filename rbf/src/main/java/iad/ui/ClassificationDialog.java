@@ -1,11 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package iad.ui;
 
 import iad.network.MultiLayerNetwork;
+import iad.network.centers.KMeansStrategy;
 import iad.network.exceptions.CannotCreateNetworkException;
 import iad.network.factory.MultiLayerNetworkFactory;
 import iad.network.input.ClassificationDataProvider;
@@ -14,7 +10,6 @@ import iad.network.neuron.AbstractNeuron;
 import iad.network.normalization.MinMaxInputNormalizer;
 import iad.network.output.ClassificationMatrixGenerator;
 import iad.network.strategy.NeuronStrategy;
-import iad.network.strategy.bp.BackPropagationStrategy;
 import iad.network.strategy.bp.BiasStrategyDecorator;
 import iad.network.strategy.bp.IdentityActivationBPS;
 import iad.network.training.ThresholdEpochNetworkTrainer;
@@ -53,9 +48,6 @@ public class ClassificationDialog extends javax.swing.JDialog {
 
     private int hiddenNeurons;
 
-    /**
-     * Creates new form ClassificationDialog
-     */
     public ClassificationDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -65,11 +57,11 @@ public class ClassificationDialog extends javax.swing.JDialog {
         matrixGenerator = new ClassificationMatrixGenerator();
 
         networkCreationParamsPanel.fixNetworkOutputField(3);
+        networkCreationParamsPanel.setNetworkInputsField(4);
         learningParamsInputPanel.setDefaultLearningRate(0.01);
-        learningParamsInputPanel.setDefaultMomentum(0);
+        learningParamsInputPanel.setDefaultMomentum(0.8);
         learningParamsInputPanel.setDefaultError(0.001);
-        learningParamsInputPanel.setDefaultEpochNum(2500);
-
+        learningParamsInputPanel.setDefaultEpochNum(1000);
     }
 
     /**
@@ -131,6 +123,7 @@ public class ClassificationDialog extends javax.swing.JDialog {
 
         jLabel1.setText("Wybrane cechy obiektu do analizy:");
 
+        objectParamsTextField.setText("0 1 2 3");
         objectParamsTextField.setMinimumSize(new java.awt.Dimension(100, 25));
         objectParamsTextField.setPreferredSize(new java.awt.Dimension(100, 25));
 
@@ -212,8 +205,10 @@ public class ClassificationDialog extends javax.swing.JDialog {
             List<InputRow> trainingData = provider.provideAllRows();
 
             ThresholdEpochNetworkTrainer trainer
-                    = new ThresholdEpochNetworkTrainer(maxEpochNum, error, learningRate, momentumFactor);
+                    = new ThresholdEpochNetworkTrainer(maxEpochNum, error, learningRate, momentumFactor, new KMeansStrategy());
             List<Double> meanSquaredError = trainer.trainNetwork(network, trainingData);
+
+            System.out.println(meanSquaredError.get(meanSquaredError.size() - 1));
 
             PlotNamer plotNamer = new PlotNamer();
             plotNamer.setBaseName("error").setEpochs(meanSquaredError.size())
@@ -261,7 +256,19 @@ public class ClassificationDialog extends javax.swing.JDialog {
             List<InputRow> data = provider.provideAllRows();
 
             List<double[]> networkResults = new ArrayList<>(data.size());
-            data.stream().forEach((InputRow row) -> networkResults.add(network.runNetwork(row.getValues())));
+            double overallError = 0;
+            for (InputRow row : data) {
+                double[] output = network.runNetwork(row.getValues());
+
+                double idealOutput = row.getExpectedOutput()[0];
+                overallError += Math.pow(idealOutput - output[0], 2);
+
+                networkResults.add(output);
+            }
+            overallError /= data.size() * 2;
+
+            System.out.println(overallError);
+            
             List<double[]> expectedResults = data.stream()
                     .map((InputRow row) -> row.getExpectedOutput()).collect(Collectors.toList());
 
@@ -286,9 +293,9 @@ public class ClassificationDialog extends javax.swing.JDialog {
             NeuronStrategy strategy = new BiasStrategyDecorator(IdentityActivationBPS.getInstance());
             IdentityActivationBPS identityStrategy = IdentityActivationBPS.getInstance();
             MultiLayerNetworkFactory factory = new MultiLayerNetworkFactory(
-                    new int[]{inputNeurons, hiddenNeurons, outputNeurons}, strategy, true);
+                    new int[]{inputNeurons, hiddenNeurons, outputNeurons}, identityStrategy, true);
             network = factory.createNetwork();
-            network.getOutputLayer().getNeurons().stream().forEach((AbstractNeuron n) -> n.setStrategy(identityStrategy));
+            network.getOutputLayer().getNeurons().stream().forEach((AbstractNeuron n) -> n.setStrategy(strategy));
 
             JOptionPane.showMessageDialog(this, "Tworzenie sieci zakończone sukcesem", "Sukces",
                     JOptionPane.INFORMATION_MESSAGE);

@@ -63,7 +63,7 @@ public class MultiLayerNetworkFactory implements NetworkFactory {
     private NeuronLayer createRadialLayer(int numberOfNeurons) {
         NeuronLayer layer = new NeuronLayer();
         for (int i = 0; i < numberOfNeurons; ++i) {
-            layer.addNeuron(new RadialNeuron());
+            layer.addNeuron(new RadialNeuron(strategy));
         }
         return layer;
     }

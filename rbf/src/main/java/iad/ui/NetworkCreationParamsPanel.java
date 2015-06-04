@@ -25,6 +25,10 @@ public class NetworkCreationParamsPanel extends javax.swing.JPanel {
         inputNeuronsInput.setText(String.valueOf(value));
         inputNeuronsInput.setEnabled(false);
     }
+    
+    public void setNetworkInputsField(int value) {
+        inputNeuronsInput.setText(String.valueOf(value));
+    }
 
     public void fixNetworkOutputField(int value) {
         outputNeuronsInput.setText(String.valueOf(value));

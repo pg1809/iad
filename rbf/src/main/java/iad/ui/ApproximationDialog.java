@@ -6,6 +6,7 @@
 package iad.ui;
 
 import iad.network.MultiLayerNetwork;
+import iad.network.centers.RandomCentersStrategy;
 import iad.network.exceptions.CannotCreateNetworkException;
 import iad.network.factory.MultiLayerNetworkFactory;
 import iad.network.input.InputRow;
@@ -35,7 +36,7 @@ import javax.swing.JOptionPane;
  */
 public class ApproximationDialog extends javax.swing.JDialog {
 
-    private PlotGenerator generator;
+    private final PlotGenerator generator;
 
     private MultiLayerNetwork network;
 
@@ -47,12 +48,6 @@ public class ApproximationDialog extends javax.swing.JDialog {
 
     private final MinMaxInputNormalizer normalizer = new MinMaxInputNormalizer();
 
-    /**
-     * Creates new form ApproximationDialog
-     *
-     * @param parent
-     * @param modal
-     */
     public ApproximationDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         generator = new PlotGenerator();
@@ -62,9 +57,9 @@ public class ApproximationDialog extends javax.swing.JDialog {
         networkCreationParamsPanel.fixNetworkInputsField(1);
         networkCreationParamsPanel.fixNetworkOutputField(1);
         learningParamsInputPanel.setDefaultLearningRate(0.01);
-        learningParamsInputPanel.setDefaultMomentum(0);
+        learningParamsInputPanel.setDefaultMomentum(0.8);
         learningParamsInputPanel.setDefaultError(0.001);
-        learningParamsInputPanel.setDefaultEpochNum(2500);
+        learningParamsInputPanel.setDefaultEpochNum(1000);
     }
 
     /**
@@ -185,7 +180,7 @@ public class ApproximationDialog extends javax.swing.JDialog {
             List<InputRow> trainingData = provider.provideAllRows();
 
             ThresholdEpochNetworkTrainer trainer
-                    = new ThresholdEpochNetworkTrainer(maxEpochNum, error, learningRate, momentumFactor);
+                    = new ThresholdEpochNetworkTrainer(maxEpochNum, error, learningRate, momentumFactor, new RandomCentersStrategy());
             List<Double> meanSquaredError = trainer.trainNetwork(network, trainingData);
 
             System.out.println(meanSquaredError.get(meanSquaredError.size() - 1));
@@ -284,9 +279,9 @@ public class ApproximationDialog extends javax.swing.JDialog {
             NeuronStrategy strategy = new BiasStrategyDecorator(IdentityActivationBPS.getInstance());
             IdentityActivationBPS identityStrategy = IdentityActivationBPS.getInstance();
             MultiLayerNetworkFactory factory = new MultiLayerNetworkFactory(
-                    new int[]{inputNeurons, hiddenNeurons, outputNeurons}, strategy, true);
+                    new int[]{inputNeurons, hiddenNeurons, outputNeurons}, identityStrategy, true);
             network = factory.createNetwork();
-            network.getOutputLayer().getNeurons().stream().forEach((AbstractNeuron n) -> n.setStrategy(identityStrategy));
+            network.getOutputLayer().getNeurons().stream().forEach((AbstractNeuron n) -> n.setStrategy(strategy));
 
             JOptionPane.showMessageDialog(this, "Tworzenie sieci zakończone sukcesem", "Sukces",
                     JOptionPane.INFORMATION_MESSAGE);

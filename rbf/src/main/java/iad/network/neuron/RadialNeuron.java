@@ -1,5 +1,7 @@
 package iad.network.neuron;
 
+import iad.network.strategy.NeuronStrategy;
+
 /**
  *
  * @author Wojciech Szałapski
@@ -7,13 +9,17 @@ package iad.network.neuron;
 public class RadialNeuron extends AbstractNeuron implements Comparable<RadialNeuron> {
 
     private double[] coordinates;
-
+    
     private double widthScalingFactor;
     
     private double distanceToNeighbour;
 
     private double distanceShift;
 
+    public RadialNeuron(NeuronStrategy strategy) {
+        this.strategy = strategy;
+    }
+    
     @Override
     public int compareTo(RadialNeuron other) {
         return (distanceToNeighbour > other.distanceToNeighbour ? 1 : -1);
@@ -38,13 +44,8 @@ public class RadialNeuron extends AbstractNeuron implements Comparable<RadialNeu
     }
 
     @Override
-    public void updateDelta(Double expectedOutput, double learningRate) {
-        // not supported in two-step training
-    }
-
-    @Override
     public void updateParameters(double momentumFactor) {
-        // not supported in two-step training
+        strategy.updateWeights(this, delta, momentumFactor);
     }
 
     public double getWidthScalingFactor() {
