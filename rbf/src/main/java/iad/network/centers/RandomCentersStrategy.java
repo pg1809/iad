@@ -1,6 +1,5 @@
 package iad.network.centers;
 
-import iad.network.distance.DistanceCalculator;
 import iad.network.input.InputRow;
 import iad.network.layer.NeuronLayer;
 import iad.network.neuron.AbstractNeuron;
@@ -26,7 +25,11 @@ public class RandomCentersStrategy extends AbstractStrategy {
         Collections.shuffle(dataCopy);
 
         for (int i = 0; i < layer.size(); ++i) {
-            layer.get(i).setCoordinates(dataCopy.get(i).getValues());
+            double[] newCoordinates = new double[dataCopy.get(i).getValues().length];
+            for (int j = 0; j < dataCopy.get(i).getValues().length; ++j) {
+                newCoordinates[j] = dataCopy.get(i).getValues()[j];
+            }
+            layer.get(i).setCoordinates(newCoordinates);
         }
 
         Collections.shuffle(layer);
