@@ -73,6 +73,7 @@ public class ApproximationDialog extends javax.swing.JDialog {
         buttonPanel = new javax.swing.JPanel();
         trainNetworkButton = new javax.swing.JButton();
         testNetworkButton = new javax.swing.JButton();
+        generateResultsButton = new javax.swing.JButton();
         networkCreationParamsPanel = new iad.ui.NetworkCreationParamsPanel();
         createNetworkPanel = new javax.swing.JPanel();
         createNetworkButton = new javax.swing.JButton();
@@ -102,6 +103,14 @@ public class ApproximationDialog extends javax.swing.JDialog {
             }
         });
         buttonPanel.add(testNetworkButton);
+
+        generateResultsButton.setText("Generuj wyniki");
+        generateResultsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                generateResultsButtonActionPerformed(evt);
+            }
+        });
+        buttonPanel.add(generateResultsButton);
 
         createNetworkButton.setText("Stwórz sieć");
         createNetworkButton.addActionListener(new java.awt.event.ActionListener() {
@@ -165,14 +174,18 @@ public class ApproximationDialog extends javax.swing.JDialog {
         }
 
         try {
-            JFileChooser trainingDataFileChooser = new JFileChooser(".");
-            int result = trainingDataFileChooser.showOpenDialog(this);
+            File chosenFile = new File("C:\\Users\\Ardavel\\Desktop\\3 Zadanie\\approximation_train_2.txt");
 
-            if (result == JFileChooser.CANCEL_OPTION) {
-                return;
+            if (evt != null) {
+                JFileChooser trainingDataFileChooser = new JFileChooser(".");
+                int result = trainingDataFileChooser.showOpenDialog(this);
+
+                if (result == JFileChooser.CANCEL_OPTION) {
+                    return;
+                }
+
+                chosenFile = trainingDataFileChooser.getSelectedFile();
             }
-
-            File chosenFile = trainingDataFileChooser.getSelectedFile();
 
             int maxEpochNum = learningParamsInputPanel.getMaximumEpochNumber();
             double learningRate = learningParamsInputPanel.getLearningRate();
@@ -187,11 +200,16 @@ public class ApproximationDialog extends javax.swing.JDialog {
                     = new ThresholdEpochNetworkTrainer(maxEpochNum, error, learningRate, momentumFactor, new RandomCentersStrategy());
             List<Double> meanSquaredError = trainer.trainNetwork(network, trainingData);
 
-            System.out.println(meanSquaredError.get(meanSquaredError.size() - 1));
+            System.out.print(meanSquaredError.get(meanSquaredError.size() - 1) + " ");
 
-            String plotFileName = new PlotNamer().setBaseName("error").setEpochs(meanSquaredError.size()).setHiddenNeurons(hiddenNeurons)
-                    .setLearningRate(learningRate).setMomentumFactor(momentumFactor)
-                    .generateName();
+            String plotFileName = "C:\\Users\\Ardavel\\Desktop\\results\\approximation\\2\\error "
+                    + hiddenNeurons + ".png";
+
+            if (evt != null) {
+                plotFileName = new PlotNamer().setBaseName("error").setEpochs(meanSquaredError.size()).setHiddenNeurons(hiddenNeurons)
+                        .setLearningRate(learningRate).setMomentumFactor(momentumFactor)
+                        .generateName();
+            }
 
             generator.generateErrorChart(meanSquaredError, plotFileName);
 
@@ -211,13 +229,18 @@ public class ApproximationDialog extends javax.swing.JDialog {
             resultsPlotData.setyAxisLabel("");
             resultsPlotData.setPlotName("Approximation");
 
-            plotFileName = new PlotNamer()
-                    .setBaseName(threePhaseLearningCheckbox.isSelected() ? "3p" : "2p")
-                    .setEpochs(meanSquaredError.size())
-                    .setHiddenNeurons(hiddenNeurons)
-                    .setLearningRate(learningRate)
-                    .setMomentumFactor(momentumFactor)
-                    .generateName();
+            if (evt != null) {
+                plotFileName = new PlotNamer()
+                        .setBaseName(threePhaseLearningCheckbox.isSelected() ? "3p" : "2p")
+                        .setEpochs(meanSquaredError.size())
+                        .setHiddenNeurons(hiddenNeurons)
+                        .setLearningRate(learningRate)
+                        .setMomentumFactor(momentumFactor)
+                        .generateName();
+            } else {
+                plotFileName = "C:\\Users\\Ardavel\\Desktop\\results\\approximation\\2\\app "
+                        + hiddenNeurons + ".png";
+            }
 
             generator.generateResultsChart(resultsPlotData, plotFileName);
         } catch (EmptyInputFieldException | IOException ex) {
@@ -231,14 +254,18 @@ public class ApproximationDialog extends javax.swing.JDialog {
                 return;
             }
 
-            JFileChooser trainingDataFileChooser = new JFileChooser(".");
-            int result = trainingDataFileChooser.showOpenDialog(this);
+            File chosenFile = new File("C:\\Users\\Ardavel\\Desktop\\3 Zadanie\\approximation_test.txt");
 
-            if (result == JFileChooser.CANCEL_OPTION) {
-                return;
+            if (evt != null) {
+                JFileChooser trainingDataFileChooser = new JFileChooser(".");
+                int result = trainingDataFileChooser.showOpenDialog(this);
+
+                if (result == JFileChooser.CANCEL_OPTION) {
+                    return;
+                }
+
+                chosenFile = trainingDataFileChooser.getSelectedFile();
             }
-
-            File chosenFile = trainingDataFileChooser.getSelectedFile();
 
             TrainingDataProvider provider = new TrainingDataProvider(
                     chosenFile, inputNeurons, outputNeurons, " ", normalizer);
@@ -268,7 +295,10 @@ public class ApproximationDialog extends javax.swing.JDialog {
             resultsPlotData.setOutputs(networkResults);
             resultsPlotData.setPlotName("Approximation");
 
-            generator.generateResultsChart(resultsPlotData);
+            String plotFileName = "C:\\Users\\Ardavel\\Desktop\\results\\approximation\\2\\test "
+                    + hiddenNeurons + ".png";
+
+            generator.generateResultsChart(resultsPlotData, plotFileName);
         } catch (IOException ex) {
             Logger.getLogger(ApproximationDialog.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Błąd", JOptionPane.ERROR_MESSAGE);
@@ -289,8 +319,10 @@ public class ApproximationDialog extends javax.swing.JDialog {
             network = factory.createNetwork();
             network.getOutputLayer().getNeurons().stream().forEach((AbstractNeuron n) -> n.setStrategy(strategy));
 
-            JOptionPane.showMessageDialog(this, "Tworzenie sieci zakończone sukcesem", "Sukces",
-                    JOptionPane.INFORMATION_MESSAGE);
+            if (evt != null) {
+                JOptionPane.showMessageDialog(this, "Tworzenie sieci zakończone sukcesem", "Sukces",
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
 
             trainNetworkButton.setEnabled(true);
             testNetworkButton.setEnabled(true);
@@ -300,11 +332,24 @@ public class ApproximationDialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_createNetworkButtonActionPerformed
 
+    private void generateResultsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateResultsButtonActionPerformed
+//        int[] radialNeuronsNumber = new int[]{3, 4, 5, 6, 7, 8, 9, 10, 20, 80};
+        int[] radialNeuronsNumber = new int[]{3, 4, 5, 6, 7, 8, 9, 10, 15};
+        for (int i = 0; i < radialNeuronsNumber.length; ++i) {
+            System.out.print(radialNeuronsNumber[i] + " ");
+            networkCreationParamsPanel.setNetworkHiddenField(radialNeuronsNumber[i]);
+            createNetworkButtonActionPerformed(null);
+            trainNetworkButtonActionPerformed(null);
+            testNetworkButtonActionPerformed(null);
+        }
+    }//GEN-LAST:event_generateResultsButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel buttonPanel;
     private javax.swing.JButton createNetworkButton;
     private javax.swing.JPanel createNetworkPanel;
     private javax.swing.JSeparator downSeparator;
+    private javax.swing.JButton generateResultsButton;
     private javax.swing.JLabel headerLabel;
     private javax.swing.JPanel headerPanel;
     private javax.swing.JSeparator headerSeparator;

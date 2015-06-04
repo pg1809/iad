@@ -103,8 +103,4 @@ public class PlotGenerator {
         File XYChart = new File(fileName);
         ChartUtilities.saveChartAsJPEG(XYChart, chart, chartWidth, chartHeight);
     }
-
-    public void generateResultsChart(ResultsPlotData data) throws IOException {
-        generateResultsChart(data, "results" + (dataChartId++) + ".png");
-    }
 }
