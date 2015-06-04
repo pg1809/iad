@@ -36,7 +36,7 @@ public class ThresholdEpochNetworkTrainer extends NetworkTrainer {
         for (int i = 0; i < maximumNumberOfEpochs; ++i) {
             System.out.println("EPOCH " + i);
             Collections.shuffle(trainingData);
-
+            
             double error = trainNetworkWithSampleSet(network, trainingData);
             meanSquaredErrors.add(error);
             

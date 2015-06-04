@@ -87,6 +87,7 @@ public class ClassificationDialog extends javax.swing.JDialog {
         learningParamsInputPanel = new iad.ui.LearningParamsInputPanel();
         jLabel1 = new javax.swing.JLabel();
         objectParamsTextField = new javax.swing.JTextField();
+        threePhaseLearningCheckbox = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Klasyfikacja");
@@ -127,6 +128,8 @@ public class ClassificationDialog extends javax.swing.JDialog {
         objectParamsTextField.setMinimumSize(new java.awt.Dimension(100, 25));
         objectParamsTextField.setPreferredSize(new java.awt.Dimension(100, 25));
 
+        threePhaseLearningCheckbox.setText("Nauka 3-fazowa");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -145,9 +148,12 @@ public class ClassificationDialog extends javax.swing.JDialog {
                         .addComponent(createNetworkSeparator))))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(objectParamsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(objectParamsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(threePhaseLearningCheckbox))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -158,6 +164,8 @@ public class ClassificationDialog extends javax.swing.JDialog {
                 .addComponent(headerSeparator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(networkCreationParamsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(threePhaseLearningCheckbox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(createNetworkPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -293,7 +301,8 @@ public class ClassificationDialog extends javax.swing.JDialog {
             NeuronStrategy strategy = new BiasStrategyDecorator(IdentityActivationBPS.getInstance());
             IdentityActivationBPS identityStrategy = IdentityActivationBPS.getInstance();
             MultiLayerNetworkFactory factory = new MultiLayerNetworkFactory(
-                    new int[]{inputNeurons, hiddenNeurons, outputNeurons}, identityStrategy, true);
+                    new int[]{inputNeurons, hiddenNeurons, outputNeurons}, 
+                    identityStrategy, true, threePhaseLearningCheckbox.isSelected());
             network = factory.createNetwork();
             network.getOutputLayer().getNeurons().stream().forEach((AbstractNeuron n) -> n.setStrategy(strategy));
 
@@ -337,6 +346,7 @@ public class ClassificationDialog extends javax.swing.JDialog {
     private javax.swing.JTextField objectParamsTextField;
     private javax.swing.JPanel startButtonPanel;
     private javax.swing.JButton testNetworkButton;
+    private javax.swing.JCheckBox threePhaseLearningCheckbox;
     private javax.swing.JButton trainNetworkButton;
     // End of variables declaration//GEN-END:variables
 }

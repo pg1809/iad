@@ -44,8 +44,8 @@ public abstract class BasicNeuronStrategy implements NeuronStrategy {
             averageDistance /= radialNeuron.getCoordinates().length;
             averageDistance *= averageDistance;
             averageDistance /= Math.pow(radialNeuron.getWidthScalingFactor(), 3);
-            
-            radialNeuron.setWidthScalingFactor(radialNeuron.getWidthScalingFactor() 
+
+            radialNeuron.setWidthScalingFactor(radialNeuron.getWidthScalingFactor()
                     + averageDistance * delta * radialNeuron.getOutput());
         } else {
             List<NeuronInput> inputNeurons = neuron.getInputNeurons();
