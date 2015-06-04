@@ -79,6 +79,7 @@ public class ClassificationDialog extends javax.swing.JDialog {
         startButtonPanel = new javax.swing.JPanel();
         trainNetworkButton = new javax.swing.JButton();
         testNetworkButton = new javax.swing.JButton();
+        generateResultsButton = new javax.swing.JButton();
         downSeparator = new javax.swing.JSeparator();
         networkCreationParamsPanel = new iad.ui.NetworkCreationParamsPanel();
         createNetworkPanel = new javax.swing.JPanel();
@@ -113,6 +114,14 @@ public class ClassificationDialog extends javax.swing.JDialog {
             }
         });
         startButtonPanel.add(testNetworkButton);
+
+        generateResultsButton.setText("Generuj wyniki");
+        generateResultsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                generateResultsButtonActionPerformed(evt);
+            }
+        });
+        startButtonPanel.add(generateResultsButton);
 
         createNetworkButton.setText("Stwórz sieć");
         createNetworkButton.addActionListener(new java.awt.event.ActionListener() {
@@ -191,14 +200,17 @@ public class ClassificationDialog extends javax.swing.JDialog {
         }
 
         try {
-            JFileChooser trainingDataFileChooser = new JFileChooser(".");
-            int result = trainingDataFileChooser.showOpenDialog(this);
+            File chosenFile = new File("C:\\Users\\Ardavel\\Desktop\\3 Zadanie\\classification_train.txt");
+            if (evt != null) {
+                JFileChooser trainingDataFileChooser = new JFileChooser(".");
+                int result = trainingDataFileChooser.showOpenDialog(this);
 
-            if (result == JFileChooser.CANCEL_OPTION) {
-                return;
+                if (result == JFileChooser.CANCEL_OPTION) {
+                    return;
+                }
+
+                chosenFile = trainingDataFileChooser.getSelectedFile();
             }
-
-            File chosenFile = trainingDataFileChooser.getSelectedFile();
 
             int maxEpochNum = learningParamsInputPanel.getMaximumEpochNumber();
             double learningRate = learningParamsInputPanel.getLearningRate();
@@ -216,13 +228,19 @@ public class ClassificationDialog extends javax.swing.JDialog {
                     = new ThresholdEpochNetworkTrainer(maxEpochNum, error, learningRate, momentumFactor, new KMeansStrategy());
             List<Double> meanSquaredError = trainer.trainNetwork(network, trainingData);
 
-            System.out.println(meanSquaredError.get(meanSquaredError.size() - 1));
+            System.out.printf("%.5f ", meanSquaredError.get(meanSquaredError.size() - 1));
 
             PlotNamer plotNamer = new PlotNamer();
             plotNamer.setBaseName("error").setEpochs(meanSquaredError.size())
                     .setLearningRate(learningRate).setMomentumFactor(momentumFactor);
 
-            plotGenerator.generateErrorChart(meanSquaredError, plotNamer.generateName());
+            String plotFileName = plotNamer.generateName();
+            if (evt == null) {
+                plotFileName = "C:\\Users\\Ardavel\\Desktop\\results\\classification\\error "
+                        + hiddenNeurons + ".png";
+            }
+
+            plotGenerator.generateErrorChart(meanSquaredError, plotFileName);
 
             List<double[]> networkResults = new ArrayList<>(trainingData.size());
             trainingData.stream().forEach(
@@ -234,10 +252,18 @@ public class ClassificationDialog extends javax.swing.JDialog {
 
             int[][] classificationMatrix
                     = matrixGenerator.generateClassificationMatrix(expectedResults, networkResults, outputNeurons);
-            matrixGenerator.saveMatrixToFile("classifMatrixTraining.txt", classificationMatrix);
+            int properlyCounted = 0;
+            for (int i = 0; i < classificationMatrix.length; ++i) {
+                properlyCounted += classificationMatrix[i][i];
+            }
+            System.out.printf("%.1f ", ((double) properlyCounted * 100) / trainingData.size());
 
-            ClassificationMatrixDialog matrixDialog = new ClassificationMatrixDialog((Frame) this.getParent(), classificationMatrix);
-            matrixDialog.setVisible(true);
+            if (evt != null) {
+                matrixGenerator.saveMatrixToFile("classifMatrixTraining.txt", classificationMatrix);
+
+                ClassificationMatrixDialog matrixDialog = new ClassificationMatrixDialog((Frame) this.getParent(), classificationMatrix);
+                matrixDialog.setVisible(true);
+            }
         } catch (EmptyInputFieldException | IncorrectParamsStringException | IOException ex) {
             Logger.getLogger(ClassificationDialog.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Błąd", JOptionPane.ERROR_MESSAGE);
@@ -250,12 +276,15 @@ public class ClassificationDialog extends javax.swing.JDialog {
                 return;
             }
 
-            JFileChooser trainingDataFileChooser = new JFileChooser(".");
-            int result = trainingDataFileChooser.showOpenDialog(this);
-            if (result == JFileChooser.CANCEL_OPTION) {
-                return;
+            File chosenFile = new File("C:\\Users\\Ardavel\\Desktop\\3 Zadanie\\classification_test.txt");
+            if (evt != null) {
+                JFileChooser trainingDataFileChooser = new JFileChooser(".");
+                int result = trainingDataFileChooser.showOpenDialog(this);
+                if (result == JFileChooser.CANCEL_OPTION) {
+                    return;
+                }
+                chosenFile = trainingDataFileChooser.getSelectedFile();
             }
-            File chosenFile = trainingDataFileChooser.getSelectedFile();
 
             int[] classificationInputs = readClassificationInputsNumbers();
 
@@ -275,17 +304,25 @@ public class ClassificationDialog extends javax.swing.JDialog {
             }
             overallError /= data.size() * 2;
 
-            System.out.println(overallError);
-            
+            System.out.printf("%.5f ", overallError);
+
             List<double[]> expectedResults = data.stream()
                     .map((InputRow row) -> row.getExpectedOutput()).collect(Collectors.toList());
 
             int[][] classificationMatrix
                     = matrixGenerator.generateClassificationMatrix(expectedResults, networkResults, outputNeurons);
-            matrixGenerator.saveMatrixToFile("classifMatrixTest.txt", classificationMatrix);
+            int properlyCounted = 0;
+            for (int i = 0; i < classificationMatrix.length; ++i) {
+                properlyCounted += classificationMatrix[i][i];
+            }
+            System.out.printf("%.1f\n", ((double) properlyCounted * 100) / data.size());
 
-            ClassificationMatrixDialog matrixDialog = new ClassificationMatrixDialog((Frame) this.getParent(), classificationMatrix);
-            matrixDialog.setVisible(true);
+            if (evt != null) {
+                matrixGenerator.saveMatrixToFile("classifMatrixTest.txt", classificationMatrix);
+
+                ClassificationMatrixDialog matrixDialog = new ClassificationMatrixDialog((Frame) this.getParent(), classificationMatrix);
+                matrixDialog.setVisible(true);
+            }
         } catch (IOException | IncorrectParamsStringException ex) {
             Logger.getLogger(ClassificationDialog.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Błąd", JOptionPane.ERROR_MESSAGE);
@@ -301,13 +338,15 @@ public class ClassificationDialog extends javax.swing.JDialog {
             NeuronStrategy strategy = new BiasStrategyDecorator(IdentityActivationBPS.getInstance());
             IdentityActivationBPS identityStrategy = IdentityActivationBPS.getInstance();
             MultiLayerNetworkFactory factory = new MultiLayerNetworkFactory(
-                    new int[]{inputNeurons, hiddenNeurons, outputNeurons}, 
+                    new int[]{inputNeurons, hiddenNeurons, outputNeurons},
                     identityStrategy, true, threePhaseLearningCheckbox.isSelected());
             network = factory.createNetwork();
             network.getOutputLayer().getNeurons().stream().forEach((AbstractNeuron n) -> n.setStrategy(strategy));
 
-            JOptionPane.showMessageDialog(this, "Tworzenie sieci zakończone sukcesem", "Sukces",
-                    JOptionPane.INFORMATION_MESSAGE);
+            if (evt != null) {
+                JOptionPane.showMessageDialog(this, "Tworzenie sieci zakończone sukcesem", "Sukces",
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
 
             trainNetworkButton.setEnabled(true);
             testNetworkButton.setEnabled(true);
@@ -316,6 +355,17 @@ public class ClassificationDialog extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Błąd", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_createNetworkButtonActionPerformed
+
+    private void generateResultsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateResultsButtonActionPerformed
+        int[] radialNeuronsNumber = new int[]{3, 4, 5, 6, 7, 8, 9, 10, 20, 80};
+        for (int i = 0; i < radialNeuronsNumber.length; ++i) {
+            System.out.print(radialNeuronsNumber[i] + " ");
+            networkCreationParamsPanel.setNetworkHiddenField(radialNeuronsNumber[i]);
+            createNetworkButtonActionPerformed(null);
+            trainNetworkButtonActionPerformed(null);
+            testNetworkButtonActionPerformed(null);
+        }
+    }//GEN-LAST:event_generateResultsButtonActionPerformed
 
     private int[] readClassificationInputsNumbers() throws IncorrectParamsStringException {
         String classifiedObjectParamsText = objectParamsTextField.getText();
@@ -337,6 +387,7 @@ public class ClassificationDialog extends javax.swing.JDialog {
     private javax.swing.JPanel createNetworkPanel;
     private javax.swing.JSeparator createNetworkSeparator;
     private javax.swing.JSeparator downSeparator;
+    private javax.swing.JButton generateResultsButton;
     private javax.swing.JLabel headerLabel;
     private javax.swing.JPanel headerPanel;
     private javax.swing.JSeparator headerSeparator;
