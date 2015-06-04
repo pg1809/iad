@@ -61,7 +61,7 @@ public class ClassificationDialog extends javax.swing.JDialog {
         learningParamsInputPanel.setDefaultLearningRate(0.01);
         learningParamsInputPanel.setDefaultMomentum(0.8);
         learningParamsInputPanel.setDefaultError(0.001);
-        learningParamsInputPanel.setDefaultEpochNum(1000);
+        learningParamsInputPanel.setDefaultEpochNum(500);
     }
 
     /**

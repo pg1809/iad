@@ -33,32 +33,6 @@ public class RandomCentersStrategy extends AbstractStrategy {
         }
 
         Collections.shuffle(layer);
-
-//        int counter = 0;
-//        double[] extremes = new double[]{0, 0.1, 0.6, 0.9, 1};
-//        for (AbstractNeuron neuron : radialLayer.getNeurons()) {
-//            RadialNeuron n = (RadialNeuron) neuron;
-//            n.setCoordinates(new double[]{extremes[counter]});
-//            ++counter;
-//        }
-
-//        for (AbstractNeuron neuron : radialLayer.getNeurons()) {
-//            for (RadialNeuron other : layer) {
-//                other.setDistanceToNeighbour(DistanceCalculator.distance((RadialNeuron) neuron, other));
-//            }
-//
-//            Collections.sort(layer);
-//
-//            double averageSquaredDistance = 0;
-//            int nearestNeighbours = Math.min(NEAREST_NEIGHBOURS, layer.size() - 1);
-//            for (int i = 1; i <= nearestNeighbours; ++i) {
-//                averageSquaredDistance
-//                        += Math.pow(DistanceCalculator.distance((RadialNeuron) neuron, layer.get(i)), 2);
-//            }
-//            averageSquaredDistance = Math.sqrt(averageSquaredDistance);
-//
-//            ((RadialNeuron) neuron).setWidthScalingFactor(averageSquaredDistance / nearestNeighbours);
-//        }
         setScalingFactorForNeurons(radialLayer, layer);
     }
 }
